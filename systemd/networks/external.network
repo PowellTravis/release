@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenCHAMI External Network
+
+[Network]
+NetworkName=openchami-external
+Internal=false

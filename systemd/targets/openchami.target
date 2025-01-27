@@ -1,0 +1,4 @@
+[Unit]
+Description=Group of OpenCHAMI-related services
+Requires=bss.service smd.service opaal.service tpm-manager.service cloud-init.service coresmd.service
+After=bss-init.service smd-init.service postgres.service

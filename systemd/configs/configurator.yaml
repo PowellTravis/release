@@ -1,0 +1,23 @@
+server:
+  host: 0.0.0.0:3334
+  jwks:
+    uri: ""
+    retries: 5
+smd:
+  host: http://smd:27779
+targets:
+  coredhcp:
+    templates:
+      - templates/coredhcp.jinja
+  syslog:
+    templates:
+      - templates/syslog.jinja
+  ansible:
+    templates:
+      - templates/ansible.jinja
+  powerman:
+    templates:
+      - templates/powerman.jinja
+  conman:
+    templates:
+      - templates/conman.jinja

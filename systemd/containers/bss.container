@@ -1,0 +1,26 @@
+[Unit]
+Description=The bss container
+Requires=bss-init.service opaal.service
+After=bss-init.service opaal.service
+
+[Container]
+ContainerName=bss
+
+HostName=bss
+
+Image=ghcr.io/openchami/bss:v1.31.3
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+# Secrets
+Secret=bss_postgres_password,type=env,target=BSS_DBPASS
+
+# Networks for the Container to use
+Network=openchami-internal.network
+
+# Proxy settings
+PodmanArgs=--http-proxy=false
+
+[Service]
+Restart=always

@@ -1,0 +1,33 @@
+[Unit]
+Description=The acme-register container
+Requires=step-ca.service
+After=step-ca.service
+
+[Container]
+ContainerName=demo.openchami.cluster
+
+HostName=demo.openchami.cluster
+
+Image=ghcr.io/openchami/acme.sh:v0.2.2
+
+
+# Volumes
+Volume=step-root-ca.volume:/root_ca/:ro
+Volume=acme-certs.volume:/root/.acme.sh
+
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+# Networks for the Container to use
+Network=openchami-cert-internal.network
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+PodmanArgs=--entrypoint='["/bin/sh","-c","/usr/bin/acme.sh --server https://step-ca:9000/acme/acme/directory --ca-bundle /root_ca/root_ca.crt -d demo.openchami.cluster --issue --standalone --force "]'
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes

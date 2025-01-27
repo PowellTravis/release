@@ -1,0 +1,27 @@
+[Unit]
+Description=The smd container
+Requires=smd-init.service opaal.service
+After=smd-init.service opaal.service
+
+[Container]
+ContainerName=smd
+
+HostName=smd
+
+Image=ghcr.io/openchami/smd:v2.17.7
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+# Secrets
+Secret=smd_postgres_password,type=env,target=SMD_DBPASS
+
+# Networks for the Container to use
+Network=openchami-internal.network
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+
+[Service]
+Restart=always

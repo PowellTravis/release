@@ -1,0 +1,40 @@
+[Unit]
+Description=The hydra container
+Requires=hydra-migrate.service ochami-jenga.service
+After=hydra-migrate.service ochami-jenga.service
+
+[Container]
+ContainerName=hydra
+
+HostName=hydra
+
+Image=oryd/hydra:v2.2.0-rc.3
+
+
+# Volumes
+Volume=/etc/ochami/configs/:/etc/config/hydra
+
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+
+# Secrets
+Secret=hydra_system_secret,type=env,target=SECRETS_SYSTEM
+Secret=hydra_dsn,type=env,target=DSN
+
+
+
+
+# Command to run in container
+Exec=serve -c /etc/config/hydra/hydra.yml all --sqa-opt-out
+
+# Networks for the Container to use
+Network=openchami-jwt-internal.network
+
+
+# Proxy settings
+PodmanArgs=--http-proxy=false
+
+[Service]
+Restart=always

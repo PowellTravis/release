@@ -1,0 +1,31 @@
+[Unit]
+Description=The tpm-manager container
+Requires=smd.service opaal.service
+After=smd.service opaal.service
+
+[Container]
+ContainerName=tpm-manager
+
+HostName=tpm-manager
+
+Image=ghcr.io/openchami/tpm-manager:v0.2.2
+
+# Volumes
+Volume=/root/.ssh:/root/.ssh:ro
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+# Command to run in container
+Exec=-port 27780 -batch-size 100 -interval 30s
+
+# Networks for the Container to use
+Network=openchami-internal.network
+Network=openchami-external.network
+
+
+# Proxy settings
+PodmanArgs=--http-proxy=false
+
+[Service]
+Restart=always

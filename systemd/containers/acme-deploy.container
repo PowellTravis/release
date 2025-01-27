@@ -1,0 +1,33 @@
+[Unit]
+Description=The acme-deploy container
+Requires=acme-register.service
+After=acme-register.service
+
+[Container]
+ContainerName=acme-deploy
+
+HostName=acme-deploy
+
+Image=ghcr.io/openchami/acme.sh:v0.2.2
+
+
+# Volumes
+Volume=/:/root_ca/:ro
+Volume=acme-certs:/root/.acme.sh
+Volume=haproxy-certs:/root/certs/
+
+# Environment Variables
+EnvironmentFile=/etc/containers/systemd/openchami.env
+
+# Networks for the Container to use
+Network=openchami-cert-internal.network
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+PodmanArgs=--entrypoint='["/bin/sh","-c","/usr/bin/acme.sh --server https://step-ca:9000/acme/acme/directory --ca-bundle /root_ca/root_ca.crt --deploy --deploy-hook haproxy --domain demo.openchami.cluster "]'
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes

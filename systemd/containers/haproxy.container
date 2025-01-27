@@ -1,0 +1,29 @@
+[Unit]
+Description=The haproxy container
+Requires=opaal.service bss.service acme-deploy.service cloud-init-server.service tpm-manager.service
+After=opaal.service bss.service acme-deploy.service cloud-init-server.service tpm-manager.service
+
+[Container]
+ContainerName=haproxy
+HostName=haproxy
+Image=cgr.dev/chainguard/haproxy
+
+# Volumes
+Volume=/etc/ochami/configs/:/usr/local/etc/haproxy/:ro
+Volume=haproxy-certs.volume:/etc/haproxy/certs/:ro
+
+# Ports
+PublishPort=172.16.0.254:8081:80
+PublishPort=172.16.0.254:8443:443
+
+# Networks for the Container to use
+Network=openchami-external.network
+Network=openchami-internal.network
+Network=openchami-jwt-internal.network
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+
+[Service]
+Restart=always

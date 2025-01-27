@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenCHAMI Network for certificate registration
+
+[Network]
+NetworkName=openchami-cert-internal
+Internal=True

@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenCHAMI Private JWT Internal Network
+
+[Network]
+NetworkName=openchami-jwt-internal
+Internal=True

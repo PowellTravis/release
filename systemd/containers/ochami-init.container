@@ -1,0 +1,32 @@
+[Unit]
+Description=The ochami-init container
+Requires=coresmd.service
+After=coresmd.service
+
+[Container]
+ContainerName=ochami-init
+
+HostName=ochami-init
+
+Image=alpine:latest
+
+
+
+
+
+
+
+
+
+
+
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+PodmanArgs=--entrypoint='["/bin/sh","-c","sleep 1 "]'
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes

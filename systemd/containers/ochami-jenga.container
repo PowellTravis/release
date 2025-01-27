@@ -1,0 +1,30 @@
+[Unit]
+Description=The ochami-jenga container
+
+[Container]
+ContainerName=ochami-jenga
+
+HostName=ochami-jenga
+
+Image=alpine:latest
+
+
+
+
+
+
+
+
+
+
+
+
+# Unsupported by generator options
+# Proxy settings
+PodmanArgs=--http-proxy=false
+PodmanArgs=--entrypoint='["/bin/sh","-c","sleep 1 "]'
+
+[Service]
+Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes
