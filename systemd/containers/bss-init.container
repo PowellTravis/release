@@ -5,12 +5,8 @@ After=smd.service
 
 [Container]
 ContainerName=bss-init
-
 HostName=bss-init
-
 Image=ghcr.io/openchami/bss:v1.31.3
-
-
 
 # Environment Variables
 EnvironmentFile=/etc/containers/systemd/openchami.env
@@ -21,8 +17,6 @@ Secret=bss_postgres_password,type=env,target=BSS_DBPASS
 # Networks for the Container to use
 Network=openchami-internal.network
 
-
-# Unsupported by generator options
 # Proxy settings
 PodmanArgs=--http-proxy=false
 PodmanArgs=--entrypoint='["/bin/sh","-c","/usr/local/bin/bss-init "]'

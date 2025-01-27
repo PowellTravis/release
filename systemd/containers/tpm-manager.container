@@ -5,9 +5,7 @@ After=smd.service opaal.service
 
 [Container]
 ContainerName=tpm-manager
-
 HostName=tpm-manager
-
 Image=ghcr.io/openchami/tpm-manager:v0.2.2
 
 # Volumes
@@ -22,7 +20,6 @@ Exec=-port 27780 -batch-size 100 -interval 30s
 # Networks for the Container to use
 Network=openchami-internal.network
 Network=openchami-external.network
-
 
 # Proxy settings
 PodmanArgs=--http-proxy=false

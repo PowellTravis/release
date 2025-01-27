@@ -9,6 +9,10 @@ Source0:        %{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 
+Requires:       podman
+Requires:       jq
+Requires:       curl
+
 %description
 This package installs all the necessary files for OpenChami.
 

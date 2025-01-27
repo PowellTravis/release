@@ -51,3 +51,107 @@ gen_access_token() {
     echo $ACCESS_TOKEN
 }
 
+
+# Function to check and pull images using podman or docker
+pull_image() {
+    local image="$1"
+
+    if command -v podman >/dev/null 2>&1; then
+        echo "Using podman to pull $image..."
+        podman pull "$image"
+    elif command -v docker >/dev/null 2>&1; then
+        echo "Using docker to pull $image..."
+        docker pull "$image"
+    else
+        echo "Neither podman nor docker is available. Skipping $image."
+        return 1
+    fi
+}
+
+pull_openchami_images() {
+    # Directory to scan for systemd unit files
+    UNIT_FILES_DIR="/etc/containers/systemd"
+
+    # Verify the directory exists
+    if [[ ! -d "$UNIT_FILES_DIR" ]]; then
+        echo "Directory $UNIT_FILES_DIR does not exist. Exiting."
+        exit 1
+    fi
+
+    # Scan unit files for container images
+    echo "Scanning unit files in $UNIT_FILES_DIR for container images..."
+
+    for unit_file in "$UNIT_FILES_DIR"/*.container; do
+        if [[ -f "$unit_file" ]]; then
+            echo "Processing $unit_file..."
+
+            # Look for container image references in the unit file
+            images=$(grep -E "Image|ContainerImage" "$unit_file" | awk -F= '{print $2}' | tr -d ' ')
+
+            for image in $images; do
+                if [[ -n "$image" ]]; then
+                    pull_image "$image"
+                fi
+            done
+        fi
+    done
+
+    echo "Container image pulling process complete."
+}
+
+create_podman_secret() {
+    local name=""
+    local secret=""
+    local force=false
+    local random=false
+    local length=16
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --name)
+                name=$2
+                shift 2
+                ;;
+            --secret)
+                secret=$2
+                shift 2
+                ;;
+            --force)
+                force=true
+                shift
+                ;;
+            --random)
+                random=true
+                shift
+                ;;
+            --length)
+                length=$2
+                shift 2
+                ;;
+            *)
+                echo "Unknown option: $1"
+                return 1
+                ;;
+        esac
+    done
+
+    if [[ -z $name ]]; then
+        echo "Secret name is required"
+        return 1
+    fi
+
+    if $random; then
+        secret=$(tr -dc '[:alnum:]' < /dev/urandom | head -c $length)
+    fi
+
+    if [[ -z $secret ]]; then
+        echo "Secret content is required"
+        return 1
+    fi
+
+    if $force; then
+        ${CONTAINER_CMD:-docker} secret rm $name 2>/dev/null
+    fi
+
+    echo -n $secret | ${CONTAINER_CMD:-docker} secret create $name -
+}

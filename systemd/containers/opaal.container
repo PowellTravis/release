@@ -5,20 +5,11 @@ After=opaal-idp.service
 
 [Container]
 ContainerName=opaal
-
 HostName=opaal
-
 Image=ghcr.io/openchami/opaal:v0.3.10
-
 
 # Volumes
 Volume=/etc/ochami/configs:/opaal/config/
-
-
-
-
-
-
 
 # Command to run in container
 Exec=/opaal/opaal login --config /opaal/config/opaal.yaml
@@ -27,8 +18,6 @@ Exec=/opaal/opaal login --config /opaal/config/opaal.yaml
 Network=ochami-internal.network
 Network=ochami-jwt-internal.network
 
-
-# Unsupported by generator options
 # Extra hosts
 PodmanArgs=--add-host='demo.openchami.cluster:172.16.0.254'
 # Proxy settings

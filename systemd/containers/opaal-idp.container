@@ -5,20 +5,11 @@ After=hydra-gen-jwks.service
 
 [Container]
 ContainerName=opaal-idp
-
 HostName=opaal-idp
-
 Image=ghcr.io/openchami/opaal:v0.3.10
-
 
 # Volumes
 Volume=/etc/ochami/configs:/opaal/config/
-
-
-
-
-
-
 
 # Command to run in container
 Exec=/opaal/opaal serve --config /opaal/config/opaal.yaml
@@ -26,8 +17,6 @@ Exec=/opaal/opaal serve --config /opaal/config/opaal.yaml
 # Networks for the Container to use
 Network=ochami-jwt-internal
 
-
-# Unsupported by generator options
 # Proxy settings
 PodmanArgs=--http-proxy=false
 

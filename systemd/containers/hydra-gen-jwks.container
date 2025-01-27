@@ -5,9 +5,7 @@ After=hydra.service
 
 [Container]
 ContainerName=hydra-gen-jwks
-
 HostName=hydra-gen-jwks
-
 Image=cgr.dev/chainguard/curl:latest
 
 # Command to run in container

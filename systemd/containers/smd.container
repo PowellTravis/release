@@ -5,9 +5,7 @@ After=smd-init.service opaal.service
 
 [Container]
 ContainerName=smd
-
 HostName=smd
-
 Image=ghcr.io/openchami/smd:v2.17.7
 
 # Environment Variables

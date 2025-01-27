@@ -5,11 +5,8 @@ After=step-ca.service
 
 [Container]
 ContainerName=demo.openchami.cluster
-
 HostName=demo.openchami.cluster
-
 Image=ghcr.io/openchami/acme.sh:v0.2.2
-
 
 # Volumes
 Volume=step-root-ca.volume:/root_ca/:ro
@@ -22,7 +19,6 @@ EnvironmentFile=/etc/containers/systemd/openchami.env
 # Networks for the Container to use
 Network=openchami-cert-internal.network
 
-# Unsupported by generator options
 # Proxy settings
 PodmanArgs=--http-proxy=false
 PodmanArgs=--entrypoint='["/bin/sh","-c","/usr/bin/acme.sh --server https://step-ca:9000/acme/acme/directory --ca-bundle /root_ca/root_ca.crt -d demo.openchami.cluster --issue --standalone --force "]'

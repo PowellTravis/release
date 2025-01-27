@@ -3,25 +3,14 @@ Description=The image-server container
 
 [Container]
 ContainerName=image-server
-
 HostName=image-server
-
 Image=docker.io/library/nginx:latest
-
 
 # Volumes
 Volume=/data/domain-images:/usr/share/nginx/html:ro
 
 # Ports
 PublishPort=172.16.0.254:8080:80
-
-
-
-
-
-
-
-
 
 # Unsupported by generator options
 # Proxy settings

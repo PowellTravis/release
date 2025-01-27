@@ -7,7 +7,6 @@ After=haproxy.service
 ContainerName=coresmd
 
 HostName=coresmd
-
 Image=ghcr.io/openchami/coredhcp:v0.2.0
 
 #Capabilities
@@ -16,13 +15,6 @@ AddCapability=NET_ADMIN
 # Volumes
 Volume=step-root-ca.volume:/root_ca/:ro
 Volume=/etc/ochami/configs/coredhcp.yaml:/etc/coredhcp/config.yaml:ro
-
-
-
-
-
-
-
 
 # Networks for the Container to use
 Network=host

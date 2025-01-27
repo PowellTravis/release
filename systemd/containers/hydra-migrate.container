@@ -5,10 +5,8 @@ After=postgres.service
 
 [Container]
 ContainerName=hydra-migrate
-
 HostName=hydra-migrate
-
-Image=oryd/hydra:v2.2.0-rc.3
+Image=docker.io/oryd/hydra:v2.2.0-rc.3
 
 # Volumes
 Volume=/etc/ochami/configs/:/etc/config/hydra
@@ -24,8 +22,6 @@ Exec=migrate -c /etc/config/hydra/hydra.yml sql -e --yes
 # Networks for the Container to use
 Network=openchami-internal.network
 
-
-# Unsupported by generator options
 # Proxy settings
 PodmanArgs=--http-proxy=false
 

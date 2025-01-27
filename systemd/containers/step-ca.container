@@ -1,15 +1,10 @@
 [Unit]
 Description=The step-ca container
-Requires=ochami-jenga.service
-After=ochami-jenga.service
 
 [Container]
 ContainerName=step-ca
-
 HostName=step-ca
-
 Image=ghcr.io/openchami/local-ca:v0.2.2
-
 
 # Volumes
 Volume=step-ca-home.volume:/home/step
@@ -19,18 +14,9 @@ Volume=step-root-ca.volume:/root_ca/
 # Environment Variables
 EnvironmentFile=/etc/containers/systemd/openchami.env
 
-
-
-
-
-
-
-
 # Networks for the Container to use
 Network=ochami-cert-internal.network
 
-
-# Unsupported by generator options
 # Proxy settings
 PodmanArgs=--http-proxy=false
 PodmanArgs=--no-hosts

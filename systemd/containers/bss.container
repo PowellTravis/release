@@ -5,9 +5,7 @@ After=bss-init.service opaal.service
 
 [Container]
 ContainerName=bss
-
 HostName=bss
-
 Image=ghcr.io/openchami/bss:v1.31.3
 
 # Environment Variables
