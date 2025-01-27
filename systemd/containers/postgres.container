@@ -4,7 +4,7 @@ Description=The postgres container
 [Container]
 ContainerName=postgres
 HostName=postgres
-Image=postgres:11.5-alpine
+Image=docker.io/library/postgres:11.5-alpine
 
 # Volumes
 Volume=postgres-data.volume:/var/lib/postgresql/data

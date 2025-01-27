@@ -34,16 +34,16 @@ cp -r systemd/containers/* %{buildroot}/etc/containers/systemd/
 cp -r systemd/volumes/* %{buildroot}/etc/containers/systemd/
 cp -r systemd/networks/* %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/* %{buildroot}/etc/systemd/system/
-cp scripts/bootstrap_openchami_secrets.sh %{buildroot}/usr/local/bin/
+cp scripts/bootstrap_openchami.sh %{buildroot}/usr/local/bin/
 cp scripts/openchami_profile.sh %{buildroot}/etc/profile.d/openchami.sh
-chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami_secrets.sh
+chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
 
 %files
 %license LICENSE
 /etc/openchami/configs/*
 /etc/containers/systemd/*
 /etc/systemd/system/openchami.target
-/usr/local/bin/bootstrap_openchami_secrets.sh
+/usr/local/bin/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
 
 %changelog

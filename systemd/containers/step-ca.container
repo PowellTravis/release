@@ -15,7 +15,7 @@ Volume=step-root-ca.volume:/root_ca/
 EnvironmentFile=/etc/containers/systemd/openchami.env
 
 # Networks for the Container to use
-Network=ochami-cert-internal.network
+Network=openchami-cert-internal.network
 
 # Proxy settings
 PodmanArgs=--http-proxy=false
