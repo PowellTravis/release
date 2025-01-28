@@ -1,6 +1,6 @@
 [Unit]
 Description=The haproxy container
-Requires=opaal.service bss.service acme-deploy.service cloud-init-server.service tpm-manager.service
+Requires=opaal.service bss.service acme-deploy.service cloud-init-server.service smd.service
 After=opaal.service bss.service acme-deploy.service cloud-init-server.service
 
 [Container]
