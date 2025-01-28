@@ -8,10 +8,10 @@ Image=docker.io/library/postgres:11.5-alpine
 
 # Volumes
 Volume=postgres-data.volume:/var/lib/postgresql/data
-Volume=/etc/ochami/pg-init:/docker-entrypoint-initdb.d
+Volume=/etc/openchami/pg-init:/docker-entrypoint-initdb.d
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Secrets
 Secret=postgres_password,type=env,target=POSTGRES_PASSWORD

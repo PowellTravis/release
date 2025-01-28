@@ -9,7 +9,7 @@ HostName=cloud-init
 Image=ghcr.io/openchami/cloud-init:v0.1.1
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Networks for the Container to use
 Network=openchami-internal.network

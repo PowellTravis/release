@@ -9,10 +9,10 @@ HostName=hydra
 Image=docker.io/oryd/hydra:v2.2.0-rc.3
 
 # Volumes
-Volume=/etc/ochami/configs/:/etc/config/hydra
+Volume=/etc/openchami/configs/:/etc/config/hydra
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Secrets
 Secret=hydra_system_secret,type=env,target=SECRETS_SYSTEM

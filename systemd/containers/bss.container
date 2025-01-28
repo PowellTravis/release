@@ -9,7 +9,7 @@ HostName=bss
 Image=ghcr.io/openchami/bss:v1.31.3
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Secrets
 Secret=bss_postgres_password,type=env,target=BSS_DBPASS

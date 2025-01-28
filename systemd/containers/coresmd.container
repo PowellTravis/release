@@ -14,7 +14,7 @@ AddCapability=NET_ADMIN
 
 # Volumes
 Volume=step-root-ca.volume:/root_ca/:ro
-Volume=/etc/ochami/configs/coredhcp.yaml:/etc/coredhcp/config.yaml:ro
+Volume=/etc/openchami/configs/coredhcp.yaml:/etc/coredhcp/config.yaml:ro
 
 # Networks for the Container to use
 Network=host

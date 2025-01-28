@@ -23,6 +23,7 @@ This package installs all the necessary files for OpenChami.
 
 %install
 mkdir -p %{buildroot}/etc/openchami/configs
+mkdir -p %{buildroot}/etc/openchami/pg_init/
 mkdir -p %{buildroot}/etc/containers/systemd
 mkdir -p %{buildroot}/etc/systemd/system
 mkdir -p %{buildroot}/usr/local/bin
@@ -36,7 +37,9 @@ cp -r systemd/networks/* %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/* %{buildroot}/etc/systemd/system/
 cp scripts/bootstrap_openchami.sh %{buildroot}/usr/local/bin/
 cp scripts/openchami_profile.sh %{buildroot}/etc/profile.d/openchami.sh
+cp scripts/multi-psql-db.sh %{buildroot}/etc/openchami/pg_init/multi-psql-db.sh
 chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
+chmod 600 /etc/openchami/*
 
 %files
 %license LICENSE
@@ -45,6 +48,7 @@ chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
 /etc/systemd/system/openchami.target
 /usr/local/bin/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
+/etc/openchami/pg_init/multi-psql-db.sh
 
 %changelog
 * Thu Jan 25 2024 Alex Lovell-Troy <alovelltroy@lanl.gov> - 0.9.0-1

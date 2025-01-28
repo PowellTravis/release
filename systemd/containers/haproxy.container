@@ -9,7 +9,7 @@ HostName=haproxy
 Image=cgr.dev/chainguard/haproxy
 
 # Volumes
-Volume=/etc/ochami/configs/:/usr/local/etc/haproxy/:ro
+Volume=/etc/openchami/configs/:/usr/local/etc/haproxy/:ro
 Volume=haproxy-certs.volume:/etc/haproxy/certs/:ro
 
 # Ports

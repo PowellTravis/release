@@ -9,7 +9,7 @@ HostName=opaal-idp
 Image=ghcr.io/openchami/opaal:v0.3.10
 
 # Volumes
-Volume=/etc/ochami/configs:/opaal/config/
+Volume=/etc/openchami/configs:/opaal/config/
 
 # Command to run in container
 Exec=/opaal/opaal serve --config /opaal/config/opaal.yaml

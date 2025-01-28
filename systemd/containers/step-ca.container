@@ -12,7 +12,7 @@ Volume=step-ca-db.volume:/home/step/db
 Volume=step-root-ca.volume:/root_ca/
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Networks for the Container to use
 Network=openchami-cert-internal.network

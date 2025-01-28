@@ -12,7 +12,7 @@ Image=ghcr.io/openchami/tpm-manager:v0.2.2
 Volume=/root/.ssh:/root/.ssh:ro
 
 # Environment Variables
-EnvironmentFile=/etc/containers/systemd/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Command to run in container
 Exec=-port 27780 -batch-size 100 -interval 30s
