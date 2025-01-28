@@ -12,7 +12,7 @@ Image=ghcr.io/openchami/cloud-init:v0.1.1
 EnvironmentFile=/etc/containers/systemd/openchami.env
 
 # Networks for the Container to use
-Network=ochami-internal.network
+Network=openchami-internal.network
 
 # Proxy settings
 PodmanArgs=--http-proxy=false

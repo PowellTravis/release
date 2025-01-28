@@ -15,7 +15,7 @@ Volume=/etc/ochami/configs:/opaal/config/
 Exec=/opaal/opaal serve --config /opaal/config/opaal.yaml
 
 # Networks for the Container to use
-Network=ochami-jwt-internal
+Network=openchami-jwt-internal
 
 # Proxy settings
 PodmanArgs=--http-proxy=false

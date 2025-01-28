@@ -36,7 +36,7 @@ retrieve_access_token() {
     local CLIENT_ID=$1
     local CLIENT_SECRET=$2
 
-    ${CONTAINER_CMD:-docker} run --http-proxy=false --rm --network ochami-jwt-internal "${CURL_CONTAINER}:${CURL_TAG}" curl -s -u "$CLIENT_ID:$CLIENT_SECRET" \
+    ${CONTAINER_CMD:-docker} run --http-proxy=false --rm --network openchami-jwt-internal "${CURL_CONTAINER}:${CURL_TAG}" curl -s -u "$CLIENT_ID:$CLIENT_SECRET" \
     -d grant_type=client_credentials \
     -d scope=openid+smd.read \
     http://hydra:4444/oauth2/token
