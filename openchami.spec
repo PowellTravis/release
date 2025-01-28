@@ -39,8 +39,8 @@ cp scripts/bootstrap_openchami.sh %{buildroot}/usr/local/bin/
 cp scripts/openchami_profile.sh %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
-chmod 644 /etc/openchami/configs/*
-chmod 600 /etc/openchami/configs/openchami.env
+chmod 644 %{buildroot}/etc/openchami/configs/*
+chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 
 %files
 %license LICENSE
