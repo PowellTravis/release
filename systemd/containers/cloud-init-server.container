@@ -4,7 +4,7 @@ Requires=smd.service opaal.service
 After=smd.service opaal.service
 
 [Container]
-ContainerName=cloud-init
+ContainerName=cloud-init-server
 HostName=cloud-init
 Image=ghcr.io/openchami/cloud-init:v0.1.1
 
