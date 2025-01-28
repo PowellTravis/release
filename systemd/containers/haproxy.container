@@ -13,8 +13,8 @@ Volume=/etc/openchami/configs/:/usr/local/etc/haproxy/:ro
 Volume=haproxy-certs.volume:/etc/haproxy/certs/:ro
 
 # Ports
-PublishPort=172.16.0.254:8081:80
-PublishPort=172.16.0.254:8443:443
+PublishPort=8081:80
+PublishPort=8443:443
 
 # Networks for the Container to use
 Network=openchami-external.network
