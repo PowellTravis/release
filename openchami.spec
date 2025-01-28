@@ -49,7 +49,7 @@ chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 /etc/systemd/system/openchami.target
 /usr/local/bin/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
-/etc/openchami/pg_init/multi-psql-db.sh
+/etc/openchami/pg-init/multi-psql-db.sh
 
 %post
 systemctl stop firewalld
