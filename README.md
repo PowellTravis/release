@@ -1,19 +1,30 @@
 # OpenCHAMI Releases
 
-OpenCHAMI is a system manager/provisioner for securely managing HPC clusters.  It has a microservices architecture leveraging third party tools for non-HPC specific applications.  The HPC-specific features are delivered through a 
+OpenCHAMI is a collection of microservices that are assembled and tested to provide HPC cluster provisioning and management.  It is released quarterly.  As far as possible, each release is supported for three years from the release date.  Since some of the components in OpenCHAMI are not developed by the consortium, we cannot promise support beyond that provided by the upstream projects.  See our [Release Policy](/Release_Policy.md) for more details.
 
-## Features
+## Current Release
 
-* Redfish-based automatic compute node discovery
-* Continuously validated inventory with secure machine identity
-* Inventory-driven operations with support for automatic DNS and DHCP
-* API Integrations for configuration management tooling like Ansible, Terraform, and Kubernetes ClusterAPI
-* Cloud-Init server with HPC features and optional Wireguard/TPM security
-* Operating System Agnostic
-* Deployable with Kubernetes, Docker Compose, Podman Quadlets, and Linux SystemD
-* OIDC Authentication with discretionary access control at the API level
-* Short-lived, narrowly scoped, renewable JWTs for admin access
+OpenCHAMI is in development without an initial release.  We expect a first supported release in Q1 2025.  If you would like to follow the most current, stable configuration, each of the partners maintains a deployment recipe that will become a release candidate in our [Deployment Recipes](https://github.com/OpenCHAMI/deployment-recipes) Repository.
 
+### Feature Map
+
+- [x] Redfish-based automatic node discovery with firmware updates
+- [x] Inventory-driven DHCP
+- [ ] Inventory-driven DNS
+- [x] Ansible Inventory Provider
+- [x] Post-Boot configuration through customizable cloud-init
+- [x] Customizable API-driven iPXE scripts
+- [x] OIDC and JWT-based authentication/authorization with short-lived, narrowly scoped tokens
+- [x] Podman Quadlet deployment with SystemD integration
+- [x] Docker Compose deployment option
+- [x] Kubernetes deployment option
+- [x] Optional Image Builder for RHEL-based Operating Systems
+- [x] OS Agnostic Boot Chain
+- [ ] Persistent State for cloud-init services
+- [ ] Backup and Recovery Process
+- [ ] Sysadmin documentation and runbooks
+- [ ] Standardized Logging
+- [x] Secure Machine Identity
 
 
 ## Latest Microservice Releases
