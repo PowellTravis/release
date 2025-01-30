@@ -26,23 +26,51 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup RPM build environment
-        run: |
-          rpmdev-setuptree
-          cp ./*.spec ~/rpmbuild/SPECS/
-          cp -r ./* ~/rpmbuild/SOURCES/ || true
-
-      - name: Build RPM package
-        run: |
-          rpmbuild -ba ~/rpmbuild/SPECS/*.spec
-
       - name: Import GPG key
         run: |
           echo "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import --batch --yes
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
+      - name: Get version and commit SHA
+        id: get_version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          else
+            echo "VERSION=0.0.0" >> $GITHUB_ENV
+          fi
+          echo "COMMIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Setup RPM build environment
+        run: |
+          rpmdev-setuptree
+          cp ./*.spec ~/rpmbuild/SPECS/
+          cp -r ./* ~/rpmbuild/SOURCES/ || true
+
+      - name: Create source tarball
+        run: |
+          mkdir -p ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}
+          cp -r ./* ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/
+          tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }} --transform "s/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/openchami-${{ env.VERSION }}/"
+
+      - name: Sign source tarball
+        if: env.VERSION != '0.0.0'
+        run: |
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --armor --detach-sign --output ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}.tar.gz.asc ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}.tar.gz
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Build RPM package
+        run: |
+          if [ "${{ env.VERSION }}" = "0.0.0" ]; then
+            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
+          else
+            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}-${{ env.COMMIT_SHA }}" --define "release 1"
+          fi
+
       - name: Sign RPM packages
+        if: env.VERSION != '0.0.0'
         run: |
           for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
             echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --detach-sign --armor $rpm
@@ -52,6 +80,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Verify RPM signatures
+        if: env.VERSION != '0.0.0'
         run: |
           for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
             rpm --checksig $rpm
@@ -60,5 +89,5 @@ jobs:
       - name: Upload RPM as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: built-rpm
-          path: ~/rpmbuild/RPMS/**/*.rpm
+          name: openchami-${{ env.VERSION }}
+          path: ~/rpmbuild/RPMS/noarch/*.rpm
