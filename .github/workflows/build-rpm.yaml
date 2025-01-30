@@ -36,7 +36,7 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      - name: Get version and commit SHA
+      - name: Get version
         id: get_version
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
@@ -44,7 +44,6 @@ jobs:
           else
             echo "VERSION=0.0.0" >> $GITHUB_ENV
           fi
-          echo "COMMIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Setup RPM build environment
         run: |
@@ -54,9 +53,9 @@ jobs:
 
       - name: Create source tarball
         run: |
-          mkdir -p ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}
-          cp -r ./* ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/
-          tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }} --transform "s/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/openchami-${{ env.VERSION }}/"
+          mkdir -p ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}
+          cp -r ./* ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}/
+          tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }} --transform "s/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/openchami-${{ env.VERSION }}/"
 
       - name: Sign source tarball
         if: env.VERSION != '0.0.0'
@@ -70,7 +69,7 @@ jobs:
           if [ "${{ env.VERSION }}" = "0.0.0" ]; then
             rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
           else
-            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}-${{ env.COMMIT_SHA }}" --define "release 1"
+            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
           fi
 
       - name: Sign RPM packages
