@@ -77,7 +77,7 @@ jobs:
         run: |
           for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
             echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --detach-sign --armor $rpm
-            rpm --addsign $rpm
+            rpm --define "_gpg_name admin@openchami.org" --addsign $rpm
           done
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
