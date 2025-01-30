@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 
 permissions:
@@ -60,7 +61,7 @@ jobs:
       - name: Sign source tarball
         if: env.VERSION != '0.0.0'
         run: |
-          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --armor --detach-sign --output ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}.tar.gz.asc ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}.tar.gz
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --armor --detach-sign --output ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz.asc ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
