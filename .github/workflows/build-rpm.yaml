@@ -1,0 +1,64 @@
+name: Build and Sign RPM
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          dnf install -y rpm-build rpm-sign rpmlint gcc make redhat-rpm-config \
+                         gpg gpg2 gnupg2 expect rpmdevtools createrepo
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup RPM build environment
+        run: |
+          rpmdev-setuptree
+          cp ./*.spec ~/rpmbuild/SPECS/
+          cp -r ./* ~/rpmbuild/SOURCES/ || true
+
+      - name: Build RPM package
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/*.spec
+
+      - name: Import GPG key
+        run: |
+          echo "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import --batch --yes
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Sign RPM packages
+        run: |
+          for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
+            echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --detach-sign --armor $rpm
+            rpm --addsign $rpm
+          done
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Verify RPM signatures
+        run: |
+          for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
+            rpm --checksig $rpm
+          done
+
+      - name: Upload RPM as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-rpm
+          path: ~/rpmbuild/RPMS/**/*.rpm
