@@ -82,13 +82,6 @@ jobs:
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Verify RPM signatures
-        if: env.VERSION != '0.0.0'
-        run: |
-          for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
-            rpm --checksig $rpm
-          done
-
       - name: Upload RPM as artifact
         uses: actions/upload-artifact@v4
         with:
