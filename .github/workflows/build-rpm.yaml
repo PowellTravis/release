@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
-  tag:
-    - 'v*'
-    
+
+
 permissions:
   contents: read
 
@@ -93,3 +94,4 @@ jobs:
         with:
           name: openchami-${{ env.VERSION }}
           path: ~/rpmbuild/RPMS/noarch/*.rpm
+  
