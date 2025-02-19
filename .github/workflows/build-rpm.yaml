@@ -1,4 +1,4 @@
-name: Build and Sign RPM
+name: Build, Sign, and Publish RPM
 
 on:
   push:
@@ -10,7 +10,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+    inputs:
+      release_tag:
+        description: 'Release tag to publish (e.g., v1.2.3). Leave empty to use the tag from a push.'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -20,6 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: fedora:latest
+    env:
+      # Set the RELEASE_TAG environment variable from workflow_dispatch input (it will be empty on non-dispatch events)
+      RELEASE_TAG: ${{ github.event.inputs.release_tag }}
 
     steps:
       - name: Install dependencies
@@ -39,12 +46,17 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          # If a release_tag input was provided via workflow_dispatch, use it.
+          if [ -n "$RELEASE_TAG" ]; then
+            VERSION=${RELEASE_TAG#v}
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
           else
-            echo "VERSION=0.0.0" >> $GITHUB_ENV
+            VERSION=0.0.0
           fi
-
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Version is ${VERSION}"
+          
       - name: Setup RPM build environment
         run: |
           rpmdev-setuptree
@@ -66,11 +78,7 @@ jobs:
 
       - name: Build RPM package
         run: |
-          if [ "${{ env.VERSION }}" = "0.0.0" ]; then
-            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
-          else
-            rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
-          fi
+          rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
 
       - name: Sign RPM packages
         if: env.VERSION != '0.0.0'
@@ -87,11 +95,35 @@ jobs:
         with:
           name: openchami-${{ env.VERSION }}
           path: ~/rpmbuild/RPMS/noarch/*.rpm
-          
-      - name: Upload RPM to GitHub Release
-        uses: ncipollo/release-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
+
+      - name: Create GitHub Release
+        if: env.VERSION != '0.0.0'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts: "openchami-${{ env.VERSION }}.rpm"
-          token: ${{ secrets.GITHUB_TOKEN }}
-  
+          # Prefix the version with "v" so that the release tag is like "v1.2.3"
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Find RPM file
+        if: env.VERSION != '0.0.0'
+        id: find_rpm
+        run: |
+          rpm_file=$(ls ~/rpmbuild/RPMS/noarch/*.rpm)
+          echo "rpm_file=${rpm_file}" >> $GITHUB_ENV
+          echo "::set-output name=path::${rpm_file}"
+
+      - name: Upload RPM to GitHub Release
+        if: env.VERSION != '0.0.0'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.find_rpm.outputs.path }}
+          asset_name: openchami-${{ env.VERSION }}.rpm
+          asset_content_type: application/x-rpm
