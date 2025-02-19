@@ -1,4 +1,4 @@
-name: Build, Sign, and Publish RPM
+name: Build and Sign RPM
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
     container:
       image: fedora:latest
     env:
-      # Set the RELEASE_TAG environment variable from workflow_dispatch input (it will be empty on non-dispatch events)
       RELEASE_TAG: ${{ github.event.inputs.release_tag }}
 
     steps:
@@ -46,7 +45,6 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          # If a release_tag input was provided via workflow_dispatch, use it.
           if [ -n "$RELEASE_TAG" ]; then
             VERSION=${RELEASE_TAG#v}
           elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
@@ -56,7 +54,7 @@ jobs:
           fi
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Version is ${VERSION}"
-          
+
       - name: Setup RPM build environment
         run: |
           rpmdev-setuptree
@@ -90,11 +88,36 @@ jobs:
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Upload RPM as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: openchami-${{ env.VERSION }}
-          path: ~/rpmbuild/RPMS/noarch/*.rpm
+      - name: Find RPM file
+        if: env.VERSION != '0.0.0'
+        id: find_rpm
+        run: |
+          rpm_file=$(ls ~/rpmbuild/RPMS/noarch/*.rpm)
+          echo "rpm_file=${rpm_file}" >> $GITHUB_ENV
+          echo "::set-output name=path::${rpm_file}"
+
+      - name: Compute RPM Checksum
+        if: env.VERSION != '0.0.0'
+        id: compute_checksum
+        run: |
+          rpm_file=$(ls ~/rpmbuild/RPMS/noarch/*.rpm)
+          checksum=$(sha256sum "$rpm_file" | awk '{print $1}')
+          echo "checksum=${checksum}" >> $GITHUB_ENV
+          echo "::set-output name=checksum::${checksum}"
+      
+      - name: Export Public GPG Key
+        if: env.VERSION != '0.0.0'
+        run: |
+          gpg --armor --export admin@openchami.org > public_gpg_key.asc
+
+      - name: Get Public GPG Key Content
+        if: env.VERSION != '0.0.0'
+        id: get_pubkey
+        run: |
+          key=$(cat public_gpg_key.asc)
+          # Escape newlines for release notes
+          escaped_key=$(echo "$key" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "::set-output name=pubkey::${escaped_key}"
 
       - name: Create GitHub Release
         if: env.VERSION != '0.0.0'
@@ -103,19 +126,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # Prefix the version with "v" so that the release tag is like "v1.2.3"
           tag_name: v${{ env.VERSION }}
           release_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
+          body: |
+            Release for openchami version v${{ env.VERSION }}
 
-      - name: Find RPM file
-        if: env.VERSION != '0.0.0'
-        id: find_rpm
-        run: |
-          rpm_file=$(ls ~/rpmbuild/RPMS/noarch/*.rpm)
-          echo "rpm_file=${rpm_file}" >> $GITHUB_ENV
-          echo "::set-output name=path::${rpm_file}"
+            **RPM SHA256 Checksum:**
+            `${{ steps.compute_checksum.outputs.checksum }}`
+
+            **Public GPG Key:**
+            ```
+            ${{ steps.get_pubkey.outputs.pubkey }}
+            ```
 
       - name: Upload RPM to GitHub Release
         if: env.VERSION != '0.0.0'
@@ -127,3 +151,14 @@ jobs:
           asset_path: ${{ steps.find_rpm.outputs.path }}
           asset_name: openchami-${{ env.VERSION }}.rpm
           asset_content_type: application/x-rpm
+
+      - name: Upload Public GPG Key to GitHub Release
+        if: env.VERSION != '0.0.0'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: public_gpg_key.asc
+          asset_name: public_gpg_key.asc
+          asset_content_type: text/plain
