@@ -136,11 +136,6 @@ jobs:
             **RPM SHA256 Checksum:**
             `${{ steps.compute_checksum.outputs.checksum }}`
 
-            **Public GPG Key:**
-            ```
-            ${{ steps.get_pubkey.outputs.pubkey }}
-            ```
-
       - name: Upload RPM to GitHub Release
         if: env.VERSION != '0.0.0'
         uses: actions/upload-release-asset@v1
