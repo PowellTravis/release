@@ -87,4 +87,11 @@ jobs:
         with:
           name: openchami-${{ env.VERSION }}
           path: ~/rpmbuild/RPMS/noarch/*.rpm
+          
+      - name: Upload RPM to GitHub Release
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          artifacts: "openchami-${{ env.VERSION }}.rpm"
+          token: ${{ secrets.GITHUB_TOKEN }}
   
