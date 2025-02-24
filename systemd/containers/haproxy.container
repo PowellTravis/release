@@ -9,8 +9,8 @@ HostName=haproxy
 Image=cgr.dev/chainguard/haproxy
 
 # Volumes
-Volume=/etc/openchami/configs/:/usr/local/etc/haproxy/:ro
-Volume=haproxy-certs.volume:/etc/haproxy/certs/:ro
+Volume=/etc/openchami/configs/:/usr/local/etc/haproxy/:ro,Z
+Volume=haproxy-certs.volume:/etc/haproxy/certs/:ro,Z
 
 # Ports
 PublishPort=8081:80
