@@ -36,3 +36,6 @@ OpenCHAMI is in development without an initial release.  We expect a first suppo
 | [OpenCHAMI/cloud-init](https://github.com/openchami/cloud-init) | [![Cloud-Init Release](https://badgen.net/github/release/openchami/cloud-init/stable)](https://github.com/openchami/cloud-init/releases) | [ghcr.io/openchami/cloud-init](https://github.com/OpenCHAMI/cloud-init/pkgs/container/cloud-init) | [Attestations](https://github.com/OpenCHAMI/cloud-init/attestations) |
 | [OpenCHAMI/coresmd](https://github.com/openchami/coresmd) | [![Coresmd Release](https://badgen.net/github/release/openchami/coresmd/stable)](https://github.com/openchami/coresmd/releases) | [ghcr.io/openchami/coresmd](https://github.com/OpenCHAMI/coresmd/pkgs/container/coresmd) | [Attestations](https://github.com/OpenCHAMI/coresmd/attestations) |
 | [OpenCHAMI/magellan](https://github.com/openchami/magellan) | [![Magellan Release](https://badgen.net/github/release/openchami/magellan/stable)](https://github.com/openchami/magellan/releases) | [ghcr.io/openchami/magellan](https://github.com/OpenCHAMI/magellan/pkgs/container/magellan) | [Attestations](https://github.com/OpenCHAMI/magellan/attestations) |
+
+
+
