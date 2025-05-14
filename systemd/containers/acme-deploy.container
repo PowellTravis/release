@@ -6,7 +6,7 @@ After=acme-register.service
 [Container]
 ContainerName=acme-deploy
 HostName=acme-deploy
-Image=ghcr.io/openchami/acme.sh:v0.2.3
+Image=ghcr.io/openchami/acme.sh:v0.2.2
 
 # Volumes
 Volume=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/root_ca/root_ca.crt:ro,z

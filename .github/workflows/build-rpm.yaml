@@ -61,6 +61,7 @@ jobs:
           cp ./*.spec ~/rpmbuild/SPECS/
           cp -r ./* ~/rpmbuild/SOURCES/ || true
 
+      # Always create and sign the source tarball, even if VERSION=0.0.0
       - name: Create source tarball
         run: |
           mkdir -p ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}
@@ -68,9 +69,11 @@ jobs:
           tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }} --transform "s/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/openchami-${{ env.VERSION }}/"
 
       - name: Sign source tarball
-        if: env.VERSION != '0.0.0'
         run: |
-          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --armor --detach-sign --output ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz.asc ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback \
+            --armor --detach-sign \
+            --output ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz.asc \
+            ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
@@ -78,16 +81,18 @@ jobs:
         run: |
           rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
 
+      # Always sign the RPM packages, even if VERSION=0.0.0
       - name: Sign RPM packages
-        if: env.VERSION != '0.0.0'
         run: |
           for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
-            echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback --detach-sign --armor $rpm
-            rpm --define "_gpg_name admin@openchami.org" --addsign $rpm
+            echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --pinentry-mode loopback \
+              --detach-sign --armor "$rpm"
+            rpm --define "_gpg_name admin@openchami.org" --addsign "$rpm"
           done
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # Only upload if we have a valid version (meaning an actual release)
       - name: Find RPM file
         if: env.VERSION != '0.0.0'
         id: find_rpm
