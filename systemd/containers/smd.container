@@ -1,6 +1,6 @@
 [Unit]
 Description=The smd container
-Requires=smd-init.service opaal.service
+Wants=postgres.service
 After=smd-init.service opaal.service
 PartOf=openchami.target
 

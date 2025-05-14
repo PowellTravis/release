@@ -1,8 +1,7 @@
 [Unit]
 Description=The acme-deploy container
-Requires=acme-register.service
-After=acme-register.service
-PartOf=openchami.target
+Requires=acme-register.service acme-certs.volume
+After=acme-register.service acme-certs.volume
 
 [Container]
 ContainerName=acme-deploy

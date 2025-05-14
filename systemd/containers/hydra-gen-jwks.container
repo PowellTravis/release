@@ -1,6 +1,6 @@
 [Unit]
 Description=The hydra-gen-jwks container
-Requires=hydra.service
+Wants=hydra.service
 After=hydra.service
 
 [Container]

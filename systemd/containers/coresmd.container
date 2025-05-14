@@ -1,6 +1,6 @@
 [Unit]
 Description=The coresmd container
-Requires=haproxy.service
+Wants=haproxy.service
 After=haproxy.service
 PartOf=openchami.target
 

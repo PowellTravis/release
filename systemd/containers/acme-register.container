@@ -1,7 +1,7 @@
 [Unit]
 Description=The acme-register container
-Requires=step-ca.service
-After=step-ca.service
+Requires=step-ca.service acme-certs.volume
+After=step-ca.service acme-certs.volume
 
 [Container]
 ContainerName=demo.openchami.cluster

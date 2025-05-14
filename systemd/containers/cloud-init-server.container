@@ -1,6 +1,6 @@
 [Unit]
 Description=The cloud-init-server container
-Requires=smd.service opaal.service
+Wants=smd.service
 After=smd.service opaal.service
 PartOf=openchami.target
 

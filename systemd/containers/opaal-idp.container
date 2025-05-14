@@ -1,6 +1,6 @@
 [Unit]
 Description=The opaal-idp container
-Requires=hydra-gen-jwks.service
+Wants=hydra-gen-jwks.service
 After=hydra-gen-jwks.service
 PartOf=openchami.target
 
