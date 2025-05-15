@@ -1,7 +1,19 @@
 [Unit]
 Description=The bss container
-After=bss-init.service opaal.service
 PartOf=openchami.target
+
+# Ensure the init job has started (and if it fails, BSS will fail):
+Requires=bss-init.service
+After=bss-init.service
+
+# Ensure SMD has started already
+Wants=smd.service
+After=smd.service
+
+# Hydraledger JWKS must be generated first:
+Wants=hydra-gen-jwks.service
+After=hydra-gen-jwks.service
+
 
 [Container]
 ContainerName=bss

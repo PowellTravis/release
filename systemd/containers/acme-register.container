@@ -1,7 +1,7 @@
 [Unit]
 Description=The acme-register container
-Requires=step-ca.service acme-certs.volume
-After=step-ca.service acme-certs.volume
+Requires=step-ca.service 
+After=step-ca.service 
 
 [Container]
 ContainerName=demo.openchami.cluster
@@ -10,7 +10,7 @@ Image=docker.io/neilpang/acme.sh:3.1.1
 
 # Volumes
 Volume=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/root_ca/root_ca.crt:ro,Z
-Volume=acme-certs:/acme.sh:Z
+Volume=acme-certs:/acme.sh:z
 
 # Networks for the Container to use
 Network=openchami-cert-internal.network

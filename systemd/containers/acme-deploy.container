@@ -9,12 +9,15 @@ HostName=acme-deploy
 Image=docker.io/neilpang/acme.sh:3.1.1
 
 # Volumes
-Volume=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/root_ca/root_ca.crt:ro,Z
+Volume=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem:/root_ca/root_ca.crt:ro,z
 Volume=acme-certs:/acme.sh:Z
-Volume=haproxy-certs:/etc/haproxy/certs/:Z
+Volume=haproxy-certs:/etc/haproxy/certs/:z
 
 # Networks for the Container to use
 Network=openchami-cert-internal.network
+
+# haproxy deploy hook requires the directory to be specified in an environment variable
+Environment=DEPLOY_HAPROXY_PEM_PATH=/etc/haproxy/certs
 
 # Command
 Exec=--deploy \
@@ -29,4 +32,4 @@ Exec=--deploy \
 [Service]
 Restart=on-failure
 Type=oneshot
-RemainAfterExit=yes
+RemainAfterExit=no

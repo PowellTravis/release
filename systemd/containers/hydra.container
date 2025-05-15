@@ -1,8 +1,15 @@
 [Unit]
 Description=The hydra container
+PartOf=openchami.target
+
+# 1) Don’t start until hydra-migrate has successfully started:
 Requires=hydra-migrate.service
 After=hydra-migrate.service
-PartOf=openchami.target
+
+# 2) Also require Step-CA to be running first:
+Wants=step-ca.service
+After=step-ca.service
+
 
 [Container]
 ContainerName=hydra

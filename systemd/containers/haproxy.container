@@ -1,7 +1,7 @@
 [Unit]
 Description=The haproxy container
-Wants=opaal.service bss.service cloud-init-server.service smd.service
-After=opaal.service bss.service acme-deploy.service cloud-init-server.service
+Wants=bss.service cloud-init-server.service smd.service
+After=opaal.service smd.service bss.service acme-deploy.service cloud-init-server.service
 PartOf=openchami.target
 
 [Container]
@@ -11,7 +11,7 @@ Image=cgr.dev/chainguard/haproxy
 
 # Volumes
 Volume=/etc/openchami/configs/:/usr/local/etc/haproxy/:ro,Z
-Volume=haproxy-certs:/etc/haproxy/certs/:ro,Z
+Volume=haproxy-certs:/etc/haproxy/certs/:ro,z
 
 # Ports
 PublishPort=8081:80

@@ -1,8 +1,14 @@
 [Unit]
 Description=The smd container
-Wants=postgres.service
-After=smd-init.service opaal.service
 PartOf=openchami.target
+
+# Don’t start until its init has run (and propagate failures):
+Requires=smd-init.service
+After=smd-init.service
+
+# Don’t start until JWKS is ready:
+Wants=hydra-gen-jwks.service
+After=hydra-gen-jwks.service
 
 [Container]
 ContainerName=smd
