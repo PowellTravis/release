@@ -30,8 +30,10 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          dnf install -y rpm-build rpm-sign rpmlint gcc make redhat-rpm-config \
-                         gpg gpg2 gnupg2 expect rpmdevtools createrepo podman
+          dnf install -y \
+            rpm-build rpm-sign rpmlint gcc make redhat-rpm-config \
+            gpg gpg2 gnupg2 expect rpmdevtools createrepo \
+            podman skopeo
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,12 +63,13 @@ jobs:
           cp ./*.spec ~/rpmbuild/SPECS/
           cp -r ./* ~/rpmbuild/SOURCES/ || true
 
-      # Always create and sign the source tarball, even if VERSION=0.0.0
       - name: Create source tarball
         run: |
           mkdir -p ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}
           cp -r ./* ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}/
-          tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }} --transform "s/openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}/openchami-${{ env.VERSION }}/"
+          tar -czf ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz \
+            -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }} \
+            --transform "s|openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}|openchami-${{ env.VERSION }}|"
 
       - name: Sign source tarball
         run: |
@@ -79,9 +82,10 @@ jobs:
   
       - name: Build RPM package
         run: |
-          rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
+          rpmbuild -ba ~/rpmbuild/SPECS/*.spec \
+            --define "version ${{ env.VERSION }}" \
+            --define "release 1"
 
-      # Always sign the RPM packages, even if VERSION=0.0.0
       - name: Sign RPM packages
         run: |
           for rpm in $(find ~/rpmbuild/RPMS/ -type f -name "*.rpm"); do
@@ -92,7 +96,6 @@ jobs:
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # Only upload if we have a valid version (meaning an actual release)
       - name: Find RPM file
         if: env.VERSION != '0.0.0'
         id: find_rpm
@@ -120,7 +123,6 @@ jobs:
         id: get_pubkey
         run: |
           key=$(cat public_gpg_key.asc)
-          # Escape newlines for release notes
           escaped_key=$(echo "$key" | sed ':a;N;$!ba;s/\n/\\n/g')
           echo "::set-output name=pubkey::${escaped_key}"
 
