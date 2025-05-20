@@ -14,7 +14,7 @@ After=step-ca.service
 [Container]
 ContainerName=hydra
 HostName=hydra
-Image=docker.io/oryd/hydra:v2.2.0-rc.3
+Image=docker.io/oryd/hydra:v2.3
 
 # Volumes
 Volume=/etc/openchami/configs/:/etc/config/hydra:Z

@@ -49,8 +49,8 @@ chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 # -- Discover, pull, and save all ghcr.io/openchami images referenced in those files --
 mkdir -p %{buildroot}%{_datadir}/openchami
 
-# gather unique image references
-image_list=$(grep -RHo --include="*.service" --include="*.target" --include="*.network" \
+# gather unique image references (only the matched URLs, no filenames)
+image_list=$(grep -rho --include="*.service" --include="*.target" --include="*.network" \
                   --include="*.volume" --include="*.container" \
                   -e 'ghcr\.io/openchami[^\s"'\''<>]*' \
                   %{buildroot}/etc/containers/systemd \
