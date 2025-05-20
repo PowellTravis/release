@@ -12,6 +12,7 @@ BuildArch:      noarch
 Requires:       podman
 Requires:       jq
 Requires:       curl
+Requires:       skopeo
 
 %description
 This package installs all the necessary files for OpenChami, including all container images
@@ -24,10 +25,6 @@ referenced in the quadlet/systemd-unit files.
 # no build step
 
 %install
-: ${STORAGE_DRIVER:=vfs}
-: ${PODMAN_GRAPHROOT:=/var/lib/containers/storage}
-: ${PODMAN_RUNROOT:=/run/containers/storage}
-
 # -- Install config, unit, script files as before --
 mkdir -p %{buildroot}/etc/openchami/configs
 mkdir -p %{buildroot}/etc/openchami/pg-init
@@ -50,32 +47,26 @@ chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
 chmod 644 %{buildroot}/etc/openchami/configs/*
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 
-# -- Discover, pull, and save all ghcr.io/openchami images referenced in those files --
+# -- Discover all ghcr.io/openchami image refs in quadlet/unit files --
+image_list=$(grep -rho --include="*.service" --include="*.target" \
+                    --include="*.network" --include="*.volume" \
+                    --include="*.container" \
+                    -e 'ghcr\.io/openchami[^\s"'"'"'<>]*' \
+                    %{buildroot}/etc/containers/systemd \
+                    %{buildroot}/etc/systemd/system \
+                    %{buildroot}/etc/openchami/configs \
+              | grep -v '/$' \
+              | sort -u)
+
+# -- Create a single deduplicated multi-image tarball via Skopeo --
 mkdir -p %{buildroot}%{_datadir}/openchami
-
-# gather unique image references (only the matched URLs, no filenames)
-image_list=$(grep -rhe 'ghcr.io.openchami' \
-            --include="*.container" \
-            %{buildroot}/etc/containers/systemd \
-            %{buildroot}/etc/systemd/system \
-            %{buildroot}/etc/openchami/configs \
-      | sed -e 's/^I.*ghcr/ghcr/' \
-      | sort -u)
-
-declare -a _imgs
-for img in $image_list; do
-  echo "Pulling $img"
-  podman --storage-driver "$STORAGE_DRIVER" \
-         --root "$PODMAN_GRAPHROOT" \
-         --runroot "$PODMAN_RUNROOT" \
-         pull "$img"
-  _imgs+=("$img")
-done
-
-# include version-and-release in the filename
 TARBALL=openchami-images-%{version}-%{release}.tar
-echo "Saving images to %{_datadir}/openchami/${TARBALL}"
-podman save -m -o %{buildroot}%{_datadir}/openchami/${TARBALL} "${_imgs[@]}"
+
+echo "$image_list" \
+  | xargs skopeo sync \
+      --src docker \
+      --dest docker-archive:%{buildroot}%{_datadir}/openchami/${TARBALL} \
+      --dest-tls-verify=false
 
 %files
 %license LICENSE
@@ -103,15 +94,15 @@ systemctl stop firewalld
 %postun
 # on upgrade or uninstall, reload systemd and clean up old tarball
 systemctl daemon-reload
-if [ $1 -eq 0 ]; then
-  # removal case
+if [ "$1" -eq 0 ]; then
   rm -f %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
 fi
 
 %changelog
 * Tue May 20 2025 Your Name <you@example.com> - %{version}-%{release}
-- Include version-release in tarball filename
-- Ensure tarball removed on uninstall
-- Run systemctl daemon-reload in %post and %postun
+- Switched to `skopeo sync` for single deduplicated, tagged multi‐image archive
+- Added Requires: skopeo
+- Preserve tags and share common layers across images
+- Retain previous enhancements: versioned tarball, daemon-reload, uninstall cleanup
 * Thu Jan 25 2024 Alex Lovell-Troy <alovelltroy@lanl.gov> - 0.9.0-1
 - Initial package
