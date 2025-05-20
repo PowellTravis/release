@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           dnf install -y rpm-build rpm-sign rpmlint gcc make redhat-rpm-config \
-                         gpg gpg2 gnupg2 expect rpmdevtools createrepo
+                         gpg gpg2 gnupg2 expect rpmdevtools createrepo podman
 
       - name: Checkout repository
         uses: actions/checkout@v4
