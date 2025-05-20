@@ -50,13 +50,13 @@ chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 mkdir -p %{buildroot}%{_datadir}/openchami
 
 # gather unique image references (only the matched URLs, no filenames)
-image_list=$(grep -rho --include="*.service" --include="*.target" --include="*.network" \
-                  --include="*.volume" --include="*.container" \
-                  -e 'ghcr\.io/openchami[^\s"'\''<>]*' \
-                  %{buildroot}/etc/containers/systemd \
-                  %{buildroot}/etc/systemd/system \
-                  %{buildroot}/etc/openchami/configs \
-            | sort -u)
+image_list=$(grep -rhe 'ghcr.io.openchami' \
+            --include="*.container" \
+            %{buildroot}/etc/containers/systemd \
+            %{buildroot}/etc/systemd/system \
+            %{buildroot}/etc/openchami/configs \
+      | sed -e 's/^I.*ghcr/ghcr/' \
+      | sort -u)
 
 declare -a _imgs
 for img in $image_list; do
