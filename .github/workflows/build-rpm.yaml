@@ -32,8 +32,7 @@ jobs:
         run: |
           dnf install -y \
             rpm-build rpm-sign rpmlint gcc make redhat-rpm-config \
-            gpg gpg2 gnupg2 expect rpmdevtools createrepo \
-            podman skopeo
+            gpg gpg2 gnupg2 expect rpmdevtools createrepo
 
       - name: Checkout repository
         uses: actions/checkout@v4

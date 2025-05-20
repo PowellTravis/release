@@ -12,7 +12,6 @@ BuildArch:      noarch
 Requires:       podman
 Requires:       jq
 Requires:       curl
-Requires:       skopeo
 
 %description
 This package installs all the necessary files for OpenChami, including all container images
@@ -47,46 +46,8 @@ chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 chmod 644 %{buildroot}/etc/openchami/configs/*
 
-# 2) Discover all ghcr.io/openchami image refs
-image_list=$(grep -rho \
-               --include="*.service" --include="*.target" \
-               --include="*.network" --include="*.volume" \
-               --include="*.container" \
-               -e 'ghcr\.io/openchami[^\s"'"'"'<>]*' \
-               %{buildroot}/etc/containers/systemd \
-               %{buildroot}/etc/systemd/system \
-               %{buildroot}/etc/openchami/configs \
-             | grep -v '/$' \
-             | sort -u)
 
-# 3) Sync into a temp dir, then pack into one Docker-archive
-mkdir -p %{buildroot}%{_datadir}/openchami
-TARBALL=openchami-images-%{version}-%{release}.tar
-dest_archive="%{buildroot}%{_datadir}/openchami/${TARBALL}"
 
-# make tempdir
-TMPDIR=$(mktemp -d)
-# build docker:// URIs
-sync_args=""
-for img in $image_list; do
-  sync_args="$sync_args docker://$img"
-done
-
-# A) sync all images (deduped) into TMPDIR
-skopeo sync \
-  --src docker \
-  --dest dir:"$TMPDIR" \
-  --dest-tls-verify=false \
-  $sync_args
-
-# B) copy that dir into a single Docker-archive
-skopeo copy \
-  --src dir \
-  --dest docker-archive:"$dest_archive" \
-  "$TMPDIR"
-
-# clean up
-rm -rf "$TMPDIR"
 
 %files
 %license LICENSE
@@ -103,18 +64,14 @@ rm -rf "$TMPDIR"
 %post
 # reload systemd so new units are seen
 systemctl daemon-reload
-# load all the bundled images
-podman load -i %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
 # bootstrap
 systemctl stop firewalld
 /usr/local/bin/bootstrap_openchami.sh
 
 %postun
-# reload systemd and remove tarball on uninstall
+# reload systemd on uninstall
 systemctl daemon-reload
-if [ "$1" -eq 0 ]; then
-  rm -f %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
-fi
+
 
 %changelog
 * Tue May 20 2025 Your Name <you@example.com> - %{version}-%{release}
