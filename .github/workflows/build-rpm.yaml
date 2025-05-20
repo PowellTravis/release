@@ -76,22 +76,22 @@ jobs:
             ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-    
-      - name: Force Podman to use VFS
+
+      - name: Configure Podman in CI
         run: |
-          # For rootless builds (rpmbuild runs as your default user)
-          mkdir -p ~/.config/containers
-          cat > ~/.config/containers/storage.conf <<-EOF
+          # rootful config
+          sudo mkdir -p /etc/containers
+          sudo tee /etc/containers/storage.conf <<'EOF'
           [storage]
           driver = "vfs"
+          graphroot = "/var/lib/containers/storage"
+          runroot   = "/run/containers/storage"
           EOF
+          # ensure runroot exists
+          sudo mkdir -p /run/containers/storage
+          sudo chmod 0755 /run/containers/storage
 
-          # (Optionally, also override the rootful default:)
-          sudo mkdir -p /etc/containers
-          echo '[storage]' | sudo tee /etc/containers/storage.conf
-          echo 'driver = "vfs"' | sudo tee -a /etc/containers/storage.conf
-
-
+  
       - name: Build RPM package
         run: |
           rpmbuild -ba ~/rpmbuild/SPECS/*.spec --define "version ${{ env.VERSION }}" --define "release 1"
