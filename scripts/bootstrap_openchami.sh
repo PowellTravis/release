@@ -22,9 +22,6 @@ create_secret_if_not_exists() {
   fi
 }
 
-# Pull OpenCHAMI images
-pull_openchami_images
-
 # Check and create secrets with random passwords if needed
 
 # Postgres Password

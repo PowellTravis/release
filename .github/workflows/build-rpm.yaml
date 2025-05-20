@@ -26,6 +26,7 @@ jobs:
       image: fedora:latest
     env:
       RELEASE_TAG: ${{ github.event.inputs.release_tag }}
+      STORAGE_DRIVER: vfs # Use vfs for podman storage driver to avoid issues with overlayfs on GitHub Actions
 
     steps:
       - name: Install dependencies
