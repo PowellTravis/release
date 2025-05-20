@@ -24,6 +24,10 @@ referenced in the quadlet/systemd-unit files.
 # no build step
 
 %install
+: ${STORAGE_DRIVER:=vfs}
+: ${PODMAN_GRAPHROOT:=/var/lib/containers/storage}
+: ${PODMAN_RUNROOT:=/run/containers/storage}
+
 # -- Install config, unit, script files as before --
 mkdir -p %{buildroot}/etc/openchami/configs
 mkdir -p %{buildroot}/etc/openchami/pg-init
@@ -61,7 +65,10 @@ image_list=$(grep -rhe 'ghcr.io.openchami' \
 declare -a _imgs
 for img in $image_list; do
   echo "Pulling $img"
-  podman pull "$img"
+  podman --storage-driver "$STORAGE_DRIVER" \
+         --root "$PODMAN_GRAPHROOT" \
+         --runroot "$PODMAN_RUNROOT" \
+         pull "$img"
   _imgs+=("$img")
 done
 

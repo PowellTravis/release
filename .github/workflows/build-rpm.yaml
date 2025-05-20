@@ -76,21 +76,6 @@ jobs:
             ~/rpmbuild/SOURCES/openchami-${{ env.VERSION }}.tar.gz
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Configure Podman in CI
-        run: |
-          # rootful config
-          sudo mkdir -p /etc/containers
-          sudo tee /etc/containers/storage.conf <<'EOF'
-          [storage]
-          driver = "vfs"
-          graphroot = "/var/lib/containers/storage"
-          runroot   = "/run/containers/storage"
-          EOF
-          # ensure runroot exists
-          sudo mkdir -p /run/containers/storage
-          sudo chmod 0755 /run/containers/storage
-
   
       - name: Build RPM package
         run: |
