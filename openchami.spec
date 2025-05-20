@@ -14,8 +14,7 @@ Requires:       jq
 Requires:       curl
 
 %description
-This package installs all the necessary files for OpenChami, including all container images
-referenced in the quadlet/systemd-unit files.
+This package installs all the necessary files for OpenChami, mostly the quadlet/systemd-unit files.
 
 %prep
 %setup -q
@@ -59,7 +58,6 @@ chmod 644 %{buildroot}/etc/openchami/configs/*
 /usr/local/bin/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
 /etc/openchami/pg-init/multi-psql-db.sh
-%attr(0644,root,root) %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
 
 %post
 # reload systemd so new units are seen
