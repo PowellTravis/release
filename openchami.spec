@@ -25,7 +25,7 @@ referenced in the quadlet/systemd-unit files.
 # no build step
 
 %install
-# -- Install config, unit, script files as before --
+# Install configs, units, scripts
 mkdir -p %{buildroot}/etc/openchami/configs
 mkdir -p %{buildroot}/etc/openchami/pg-init
 mkdir -p %{buildroot}/etc/containers/systemd
@@ -47,26 +47,35 @@ chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
 chmod 644 %{buildroot}/etc/openchami/configs/*
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 
-# -- Discover all ghcr.io/openchami image refs in quadlet/unit files --
-image_list=$(grep -rho --include="*.service" --include="*.target" \
-                    --include="*.network" --include="*.volume" \
-                    --include="*.container" \
-                    -e 'ghcr\.io/openchami[^\s"'"'"'<>]*' \
-                    %{buildroot}/etc/containers/systemd \
-                    %{buildroot}/etc/systemd/system \
-                    %{buildroot}/etc/openchami/configs \
-              | grep -v '/$' \
-              | sort -u)
+# Discover all ghcr.io/openchami image refs in quadlet/unit files
+image_list=$(grep -rho \
+               --include="*.service" --include="*.target" \
+               --include="*.network" --include="*.volume" \
+               --include="*.container" \
+               -e 'ghcr\.io/openchami[^\s"'"'"'<>]*' \
+               %{buildroot}/etc/containers/systemd \
+               %{buildroot}/etc/systemd/system \
+               %{buildroot}/etc/openchami/configs \
+             | grep -v '/$' \
+             | sort -u)
 
-# -- Create a single deduplicated multi-image tarball via Skopeo --
+# Prepare multi-image archive via Skopeo (deduped, tags preserved)
 mkdir -p %{buildroot}%{_datadir}/openchami
 TARBALL=openchami-images-%{version}-%{release}.tar
+dest_archive="%{buildroot}%{_datadir}/openchami/${TARBALL}"
 
-echo "$image_list" \
-  | xargs skopeo sync \
-      --src docker \
-      --dest docker-archive:%{buildroot}%{_datadir}/openchami/${TARBALL} \
-      --dest-tls-verify=false
+# Build the list of docker:// URIs
+sync_args=""
+for img in $image_list; do
+  sync_args="$sync_args docker://$img"
+done
+
+# Run skopeo sync once
+skopeo sync \
+  --src docker \
+  --dest docker-archive:$dest_archive \
+  --dest-tls-verify=false \
+  $sync_args
 
 %files
 %license LICENSE
@@ -81,18 +90,18 @@ echo "$image_list" \
 %attr(0644,root,root) %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
 
 %post
-# reload systemd units so new .service/.target files are recognized
+# Reload systemd units
 systemctl daemon-reload
 
-# load all bundled container images
+# Load all bundled container images
 podman load -i %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
 
-# existing bootstrap
+# Existing bootstrap
 systemctl stop firewalld
 /usr/local/bin/bootstrap_openchami.sh
 
 %postun
-# on upgrade or uninstall, reload systemd and clean up old tarball
+# Reload systemd and clean up tarball on uninstall
 systemctl daemon-reload
 if [ "$1" -eq 0 ]; then
   rm -f %{_datadir}/openchami/openchami-images-%{version}-%{release}.tar
@@ -100,9 +109,9 @@ fi
 
 %changelog
 * Tue May 20 2025 Your Name <you@example.com> - %{version}-%{release}
-- Switched to `skopeo sync` for single deduplicated, tagged multi‐image archive
+- Switched to `skopeo sync` with correct image discovery regex
+- Single deduplicated, tag-preserving multi-image archive
 - Added Requires: skopeo
-- Preserve tags and share common layers across images
-- Retain previous enhancements: versioned tarball, daemon-reload, uninstall cleanup
+- Retained versioned tarball, daemon-reload, uninstall cleanup
 * Thu Jan 25 2024 Alex Lovell-Troy <alovelltroy@lanl.gov> - 0.9.0-1
 - Initial package
