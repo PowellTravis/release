@@ -6,7 +6,7 @@ source /etc/profile.d/openchami.sh
 generate_random_password() {
   # Generate a random password with 16 characters
   local num_chars=${1:-16}
-  openssl rand -base64 "${num_chars}" | openssl dgst | cut -d' ' -f2
+  openssl rand -base64 "${num_chars}" | openssl dgst | cut -d' ' -f2 | fold -w "${num_chars}" | head -n 1
 }
 
 # Function to create a secret if it doesn't exist
