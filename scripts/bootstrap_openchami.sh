@@ -5,7 +5,8 @@ source /etc/profile.d/openchami.sh
 # Function to generate a random password
 generate_random_password() {
   # Generate a random password with 16 characters
-  openssl rand -base64 16
+  local num_chars=${1:-16}
+  dd bs=512 if=/dev/urandom count=1 2>/dev/null | tr -dc '[:alnum:]' | fold -w "${num_chars}" | head -n 1
 }
 
 # Function to create a secret if it doesn't exist
