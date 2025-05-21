@@ -13,6 +13,7 @@ Requires:       podman
 Requires:       jq
 Requires:       curl
 Requires(post): coreutils
+Requires(post): openssl
 
 %description
 This package installs all the necessary files for OpenChami, mostly the quadlet/systemd-unit files.
