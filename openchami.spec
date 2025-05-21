@@ -12,6 +12,7 @@ BuildArch:      noarch
 Requires:       podman
 Requires:       jq
 Requires:       curl
+Requires(post): coreutils
 
 %description
 This package installs all the necessary files for OpenChami, mostly the quadlet/systemd-unit files.
