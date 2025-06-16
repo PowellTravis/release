@@ -23,7 +23,7 @@ Environment=DEPLOY_HAPROXY_PEM_PATH=/etc/haproxy/certs
 Exec=--deploy \
   --ca-bundle /root_ca/root_ca.crt \
   --server https://step-ca:9000/acme/acme/directory \
-  -d demo.openchami.cluster \
+  -d $SYSTEM_URL \
   --home /acme.sh \
   --standalone \
   --deploy-hook haproxy \
@@ -33,3 +33,4 @@ Exec=--deploy \
 Restart=on-failure
 Type=oneshot
 RemainAfterExit=no
+EnvironemntFile=-/etc/openchami/configs/openchami.env
