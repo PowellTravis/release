@@ -23,3 +23,4 @@ PodmanArgs=--http-proxy=false
 
 [Service]
 Restart=always
+EnvironemntFile=-/etc/openchami/configs/openchami.env
