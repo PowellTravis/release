@@ -1,6 +1,6 @@
 Name:           openchami
 Version:        %{version}
-Release:        %{release}%{?dist}
+Release:        %{rel}
 Summary:        OpenCHAMI RPM package
 
 License:        MIT
