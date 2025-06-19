@@ -16,7 +16,7 @@ Requires(post): coreutils
 Requires(post): openssl
 
 %description
-This package installs all the necessary files for OpenChami, mostly the quadlet/systemd-unit files.
+The quadlets, systemd units, and config files for the Open Composable, Heterogeneous, Adaptable Management Infrastructure
 
 %prep
 %setup -q
