@@ -16,7 +16,7 @@ Volume=acme-certs:/acme.sh:z
 Network=openchami-cert-internal.network
 
 # Environment Variables
-EnvironmentFile=-/etc/openchami/configs/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 Exec=--issue \
   --ca-bundle /root_ca/root_ca.crt \

@@ -20,7 +20,7 @@ Network=openchami-cert-internal.network
 Environment=DEPLOY_HAPROXY_PEM_PATH=/etc/haproxy/certs
 
 # Environment Variables
-EnvironmentFile=-/etc/openchami/configs/openchami.env
+EnvironmentFile=/etc/openchami/configs/openchami.env
 
 # Command
 Exec=--deploy \
