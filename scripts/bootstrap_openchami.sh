@@ -27,8 +27,18 @@ create_secret_if_not_exists() {
 generate_environment_file() {
   local short_name=$(hostname -s)
   local dns_name=$(hostname -d)
+  local fqdn=$(hostname)
   sed -i "s/^SYSTEM_NAME=.*/SYSTEM_NAME=${short_name}/" /etc/openchami/configs/openchami.env
   sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/" /etc/openchami/configs/openchami.env
+  sed -i "s/^SYSTEM_URL=.*/SYSTEM_URL=${fqdn}/" /etc/openchami/configs/openchami.env
+}
+
+acme_correction() {
+  local fqdn=$(hostname)
+  sed -i "s|-d .*\ \\|-d $(fqdn) \\\\|" /etc/containers/systemd/acme-deploy.container
+  sed -i "s/^ContainerName=.*/ContainerName=${fqdn}/" /etc/containers/systemd/acme-register.container
+  sed -i "s/^HostName=.*/HostName=${fqdn}/" /etc/containers/systemd/acme-register.container
+  sed -i "s|-d .*\ \\|-d $(fqdn) \\\\|" /etc/containers/systemd/acme-register.container
 }
 
 # Check and create secrets with random passwords if needed
@@ -63,3 +73,6 @@ create_secret_if_not_exists "postgres_multiple_databases" "$POSTGRES_MULTIPLE_DA
 
 # openchami.env Configuration
 generate_environment_file
+
+# Correct the ACME files
+acme_correction
