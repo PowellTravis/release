@@ -24,11 +24,11 @@ create_secret_if_not_exists() {
 }
 
 # Function to define system_name and system_domain in the environment file
-generate_environemt_file() {
+generate_environment_file() {
   local short_name=$(hostname -s)
   local dns_name=$(hostname -d)
   sed -i "s/^SYSTEM_NAME=.*/SYSTEM_NAME=${short_name}/" /etc/openchami/configs/openchami.env
-  sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/"/etc/openchami/configs/openchami.env
+  sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/" /etc/openchami/configs/openchami.env
 }
 
 # Check and create secrets with random passwords if needed
@@ -62,4 +62,4 @@ POSTGRES_MULTIPLE_DATABASES="hmsds:smd-user:$(podman secret inspect smd_postgres
 create_secret_if_not_exists "postgres_multiple_databases" "$POSTGRES_MULTIPLE_DATABASES"
 
 # openchami.env Configuration
-generate_environemt_file()
+generate_environment_file
