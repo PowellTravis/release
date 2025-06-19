@@ -16,13 +16,13 @@ Volume=acme-certs:/acme.sh:z
 Network=openchami-cert-internal.network
 
 # Environment Variables
-EnvironmentFile=/etc/openchami/configs/openchami.env
+EnvironmentFile=-/etc/openchami/configs/openchami.env
 
 Exec=--issue \
   --ca-bundle /root_ca/root_ca.crt \
   --server https://step-ca:9000/acme/acme/directory \
   --home /acme.sh \
-  -d $SYSTEM_URL \
+  -d ${SYSTEM_URL} \
   --standalone \
   --force
 
