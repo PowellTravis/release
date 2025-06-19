@@ -31,6 +31,11 @@ generate_environment_file() {
   sed -i "s/^SYSTEM_NAME=.*/SYSTEM_NAME=${short_name}/" /etc/openchami/configs/openchami.env
   sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/" /etc/openchami/configs/openchami.env
   sed -i "s/^SYSTEM_URL=.*/SYSTEM_URL=${fqdn}/" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_SELF_ISSUER=.*|URLS_SELF_ISSUER=https://${fqdn}|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_SELF_PUBLIC=.*|URLS_SELF_PUBLIC=https://${fqdn}|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_LOGIN=.*|URLS_LOGIN=https://${fqdn}/login|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_CONSENT=.*|URLS_CONSENT=https://${fqdn}/consent|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_LOGOUT=.*|URLS_LOGOUT=https://${fqdn}/logout|" /etc/openchami/configs/openchami.env
 }
 
 acme_correction() {
