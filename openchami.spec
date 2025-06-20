@@ -40,7 +40,7 @@ cp -r systemd/volumes/*           %{buildroot}/etc/containers/systemd/
 cp -r systemd/networks/*          %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/*           %{buildroot}/etc/systemd/system/
 cp -r systemd/system/*            %{buildroot}/etc/systemd/system/
-cp scripts/bootstrap_openchami.sh %{buildroot}/usr/libexec/openchami
+cp scripts/bootstrap_openchami.sh %{buildroot}/usr/libexec/openchami/
 cp scripts/openchami_profile.sh   %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh       %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 
