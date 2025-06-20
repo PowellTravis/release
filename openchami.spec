@@ -14,6 +14,8 @@ Requires:       jq
 Requires:       curl
 Requires(post): coreutils
 Requires(post): openssl
+Requires(post): hostname
+Requires(post): sed
 
 %description
 This package installs all the necessary files for OpenChami, mostly the quadlet/systemd-unit files.

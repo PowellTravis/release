@@ -27,15 +27,15 @@ create_secret_if_not_exists() {
 generate_environment_file() {
   local short_name=$(hostname -s)
   local dns_name=$(hostname -d)
-  local fqdn=$(hostname)
+  local system_fqdn=$(hostname)
   sed -i "s/^SYSTEM_NAME=.*/SYSTEM_NAME=${short_name}/" /etc/openchami/configs/openchami.env
   sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/" /etc/openchami/configs/openchami.env
-  sed -i "s/^SYSTEM_URL=.*/SYSTEM_URL=${fqdn}/" /etc/openchami/configs/openchami.env
-  sed -i "s|^URLS_SELF_ISSUER=.*|URLS_SELF_ISSUER=https://${fqdn}|" /etc/openchami/configs/openchami.env
-  sed -i "s|^URLS_SELF_PUBLIC=.*|URLS_SELF_PUBLIC=https://${fqdn}|" /etc/openchami/configs/openchami.env
-  sed -i "s|^URLS_LOGIN=.*|URLS_LOGIN=https://${fqdn}/login|" /etc/openchami/configs/openchami.env
-  sed -i "s|^URLS_CONSENT=.*|URLS_CONSENT=https://${fqdn}/consent|" /etc/openchami/configs/openchami.env
-  sed -i "s|^URLS_LOGOUT=.*|URLS_LOGOUT=https://${fqdn}/logout|" /etc/openchami/configs/openchami.env
+  sed -i "s/^SYSTEM_URL=.*/SYSTEM_URL=${system_fqdn}/" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_SELF_ISSUER=.*|URLS_SELF_ISSUER=https://${system_fqdn}|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_SELF_PUBLIC=.*|URLS_SELF_PUBLIC=https://${system_fqdn}|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_LOGIN=.*|URLS_LOGIN=https://${system_fqdn}/login|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_CONSENT=.*|URLS_CONSENT=https://${system_fqdn}/consent|" /etc/openchami/configs/openchami.env
+  sed -i "s|^URLS_LOGOUT=.*|URLS_LOGOUT=https://${system_fqdn}/logout|" /etc/openchami/configs/openchami.env
 }
 
 acme_correction() {
