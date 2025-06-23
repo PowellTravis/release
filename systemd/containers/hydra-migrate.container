@@ -29,4 +29,4 @@ PodmanArgs=--http-proxy=false
 [Service]
 Restart=on-failure
 Type=oneshot
-RemainAfterExit=no
+RemainAfterExit=yes

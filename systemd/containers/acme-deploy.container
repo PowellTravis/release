@@ -33,4 +33,4 @@ Exec=--deploy \
 [Service]
 Restart=on-failure
 Type=oneshot
-RemainAfterExit=no
+RemainAfterExit=yes
