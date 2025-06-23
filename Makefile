@@ -8,7 +8,7 @@ HOME    ?= $(shell echo ${HOME})
 
 rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-all: openchami.rpm
+all: openchami-$(VERSION)-$(RELEASE).noarch.rpm
 
 $(HOME)/rpmbuild:
 	rpmdev-setuptree
@@ -27,9 +27,9 @@ $(HOME)/rpmbuild/SOURCES/openchami-$(VERSION).tar.gz: $(HOME)/rpmbuild $(call rw
 $(HOME)/rpmbuild/RPMS/noarch/openchami-$(VERSION)-$(RELEASE).noarch.rpm: $(HOME)/rpmbuild/SPECS/openchami.spec $(HOME)/rpmbuild/SOURCES/openchami-$(VERSION).tar.gz
 	rpmbuild -ba $(HOME)/rpmbuild/SPECS/openchami.spec --define 'version $(VERSION)' --define 'rel $(RELEASE)'
 
-openchami.rpm: $(HOME)/rpmbuild/RPMS/noarch/openchami-$(VERSION)-$(RELEASE).noarch.rpm
+openchami-$(VERSION)-$(RELEASE).noarch.rpm: $(HOME)/rpmbuild/RPMS/noarch/openchami-$(VERSION)-$(RELEASE).noarch.rpm
 	cp $< $@
 
 clean:
 	rm -rf $(HOME)/rpmbuild
-	rm -f openchami.rpm
+	rm -f openchami-*.noarch.rpm
