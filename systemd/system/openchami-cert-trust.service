@@ -6,7 +6,7 @@ PartOf=openchami.target
 
 [Service]
 Type=oneshot
-ExecStart=podman cp step-ca:/root_ca/root_ca.crt /etc/pki/ca-trust/source/anchors/openchami.pem
+ExecStart=/bin/sh -c 'until podman cp step-ca:/root_ca/root_ca.crt /etc/pki/ca-trust/source/anchors/openchami.pem; do sleep 1; done'
 ExecStart=update-ca-trust
 StandardOutput=journal
 RemainAfterExit=yes
