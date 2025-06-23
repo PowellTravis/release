@@ -1,8 +1,8 @@
 [Unit]
 Description=The haproxy container
 Wants=bss.service cloud-init-server.service smd.service acme-deploy.service
-After=opaal.service smd.service bss.service acme-deploy.service cloud-init-server.service
-Requires=acme-deploy.service
+After=openchami-external-network.service opaal.service smd.service bss.service acme-deploy.service cloud-init-server.service
+Requires=openchami-external-network.service acme-deploy.service
 PartOf=openchami.target
 
 [Container]

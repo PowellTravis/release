@@ -1,7 +1,7 @@
 [Unit]
 Description=The acme-deploy container
-Requires=acme-register.service acme-certs.volume
-After=acme-register.service acme-certs.volume
+Requires=haproxy-certs-volume.service acme-register.service
+After=haproxy-certs-volume.service acme-register.service
 
 [Container]
 ContainerName=acme-deploy

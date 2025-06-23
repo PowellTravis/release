@@ -1,6 +1,8 @@
 [Unit]
 Description=The step-ca container
 PartOf=openchami.target
+Requires=openchami-cert-internal-network.service step-ca-home-volume.service step-ca-db-volume.service step-root-ca-volume.service
+After=openchami-cert-internal-network.service step-ca-home-volume.service step-ca-db-volume.service step-root-ca-volume.service
 
 [Container]
 ContainerName=step-ca
