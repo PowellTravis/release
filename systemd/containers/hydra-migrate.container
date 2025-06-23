@@ -2,6 +2,7 @@
 Description=The hydra-migrate container
 Requires=postgres.service
 After=postgres.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=hydra-migrate

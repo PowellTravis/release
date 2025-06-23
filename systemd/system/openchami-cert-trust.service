@@ -2,6 +2,7 @@
 Description=Extract and trust OpenCHAMI root CA certificate
 After=step-ca.service
 Requires=step-ca.service
+PartOf=openchami.target
 
 [Service]
 Type=oneshot

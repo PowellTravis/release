@@ -2,6 +2,7 @@
 Description=The acme-deploy container
 Requires=haproxy-certs-volume.service acme-register.service
 After=haproxy-certs-volume.service acme-register.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=acme-deploy

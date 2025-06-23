@@ -2,6 +2,7 @@
 Description=The acme-register container
 Requires=acme-certs-volume.service openchami-cert-trust.service acme-certs-volume.service
 After=acme-certs-volume.service openchami-cert-trust.service acme-certs-volume.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=demo.openchami.cluster

@@ -2,6 +2,7 @@
 Description=The hydra-gen-jwks container
 Wants=hydra.service
 After=hydra.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=hydra-gen-jwks
