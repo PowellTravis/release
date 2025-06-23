@@ -31,7 +31,8 @@ mkdir -p %{buildroot}/etc/openchami/configs \
          %{buildroot}/etc/containers/systemd \
          %{buildroot}/etc/systemd/system \
          %{buildroot}/usr/local/bin \
-         %{buildroot}/etc/profile.d
+         %{buildroot}/etc/profile.d \
+         %{buildroot}/usr/libexec/openchami
 
 cp -r systemd/configs/*           %{buildroot}/etc/openchami/configs/
 cp -r systemd/containers/*        %{buildroot}/etc/containers/systemd/
@@ -39,11 +40,11 @@ cp -r systemd/volumes/*           %{buildroot}/etc/containers/systemd/
 cp -r systemd/networks/*          %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/*           %{buildroot}/etc/systemd/system/
 cp -r systemd/system/*            %{buildroot}/etc/systemd/system/
-cp scripts/bootstrap_openchami.sh %{buildroot}/usr/local/bin/
+cp scripts/bootstrap_openchami.sh %{buildroot}/usr/libexec/openchami/
 cp scripts/openchami_profile.sh   %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh       %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 
-chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
+chmod +x %{buildroot}/usr/libexec/openchami/bootstrap_openchami.sh
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 chmod 644 %{buildroot}/etc/openchami/configs/*
 
@@ -58,7 +59,7 @@ chmod 644 %{buildroot}/etc/openchami/configs/*
 /etc/systemd/system/openchami-cert-renewal.service
 /etc/systemd/system/openchami-cert-renewal.timer
 /etc/systemd/system/openchami-cert-trust.service
-/usr/local/bin/bootstrap_openchami.sh
+/usr/libexec/openchami/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
 /etc/openchami/pg-init/multi-psql-db.sh
 
@@ -67,7 +68,7 @@ chmod 644 %{buildroot}/etc/openchami/configs/*
 systemctl daemon-reload
 # bootstrap
 systemctl stop firewalld
-/usr/local/bin/bootstrap_openchami.sh
+/usr/libexec/openchami/bootstrap_openchami.sh
 
 %postun
 # reload systemd on uninstall
