@@ -42,10 +42,12 @@ cp -r systemd/networks/*          %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/*           %{buildroot}/etc/systemd/system/
 cp -r systemd/system/*            %{buildroot}/etc/systemd/system/
 cp scripts/bootstrap_openchami.sh %{buildroot}/usr/local/bin/
+cp script/ochami-certificate-update %{buildroot}/usr/local/bin/
 cp scripts/openchami_profile.sh   %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh       %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 
 chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
+chmod +x %{buildroot}/usr/local/bin/ochami-certificate-update
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 chmod 644 %{buildroot}/etc/openchami/configs/*
 

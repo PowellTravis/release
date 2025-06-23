@@ -39,11 +39,11 @@ generate_environment_file() {
 }
 
 acme_correction() {
-  local fqdn=$(hostname)
-  sed -i "s|-d .* \\\\|-d ${fqdn} \\\\|" /etc/containers/systemd/acme-deploy.container
-  sed -i "s/^ContainerName=.*/ContainerName=${fqdn}/" /etc/containers/systemd/acme-register.container
-  sed -i "s/^HostName=.*/HostName=${fqdn}/" /etc/containers/systemd/acme-register.container
-  sed -i "s|-d .* \\\\|-d ${fqdn} \\\\|" /etc/containers/systemd/acme-register.container
+  local system_fqdn=$(hostname)
+  sed -i "s|-d .* \\\\|-d ${system_fqdn} \\\\|" /etc/containers/systemd/acme-deploy.container
+  sed -i "s/^ContainerName=.*/ContainerName=${system_fqdn}/" /etc/containers/systemd/acme-register.container
+  sed -i "s/^HostName=.*/HostName=${system_fqdn}/" /etc/containers/systemd/acme-register.container
+  sed -i "s|-d .* \\\\|-d ${system_fqdn} \\\\|" /etc/containers/systemd/acme-register.container
 }
 
 # Check and create secrets with random passwords if needed
