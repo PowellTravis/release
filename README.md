@@ -2,6 +2,31 @@
 
 OpenCHAMI is a collection of microservices that are assembled and tested to provide HPC cluster provisioning and management.  It is released quarterly.  As far as possible, each release is supported for three years from the release date.  Since some of the components in OpenCHAMI are not developed by the consortium, we cannot promise support beyond that provided by the upstream projects.  See our [Release Policy](/Release_Policy.md) for more details.
 
+## Building Locally
+
+Requirements:
+
+- `rpmdevtools`
+- `make`
+
+Generate `openchami-<version>-1.noarch.rpm` in this repo:
+
+```bash
+make
+```
+
+Increase the release version (`openchami-<version>-2.noarch.rpm`):
+
+```bash
+make RELEASE=2
+```
+
+Clean built RPMs in repo directory:
+
+```
+make clean
+```
+
 ## Current Release
 
 OpenCHAMI is in development without an initial release.  We expect a first supported release in Q1 2025.  If you would like to follow the most current, stable configuration, each of the partners maintains a deployment recipe that will become a release candidate in our [Deployment Recipes](https://github.com/OpenCHAMI/deployment-recipes) Repository.
