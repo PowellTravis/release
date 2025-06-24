@@ -48,7 +48,7 @@ cp scripts/openchami_profile.sh   %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh       %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 
 chmod +x %{buildroot}/usr/libexec/openchami/bootstrap_openchami.sh
-chmod +x %{buildroot}/usr/local/bin/ochami-certificate-update
+chmod +x %{buildroot}/usr/bin/ochami-certificate-update
 
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 chmod 644 %{buildroot}/etc/openchami/configs/*
