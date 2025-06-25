@@ -2,6 +2,7 @@
 Description=The hydra-migrate container
 Requires=postgres.service
 After=postgres.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=hydra-migrate
@@ -28,4 +29,4 @@ PodmanArgs=--http-proxy=false
 [Service]
 Restart=on-failure
 Type=oneshot
-RemainAfterExit=no
+RemainAfterExit=yes

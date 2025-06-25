@@ -2,6 +2,7 @@
 Description=The bss-init container
 Wants=smd.service 
 Requires=postgres.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=bss-init

@@ -2,6 +2,7 @@
 Description=The hydra-gen-jwks container
 Wants=hydra.service
 After=hydra.service
+PartOf=openchami.target
 
 [Container]
 ContainerName=hydra-gen-jwks
@@ -22,4 +23,4 @@ PodmanArgs=--http-proxy=false
 [Service]
 Restart=on-failure
 Type=oneshot
-RemainAfterExit=no
+RemainAfterExit=yes

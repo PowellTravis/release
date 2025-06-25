@@ -125,6 +125,21 @@ jobs:
           escaped_key=$(echo "$key" | sed ':a;N;$!ba;s/\n/\\n/g')
           echo "::set-output name=pubkey::${escaped_key}"
 
+      - name: Genereate release notes
+        if: env.VERSION != '0.0.0'
+        id: gen_rel_notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo '# OpenCHAMI v${{ env.VERSION }}'
+            echo ''
+            echo '**RPM SHA256 Checksum:**'
+            echo '`${{ steps.compute_checksum.outputs.checksum }}`'
+            echo
+            gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" -F tag_name="${{ steps.extract_version.outputs.version }}" --jq .body
+          } > CHANGELOG.md
+
       - name: Create GitHub Release
         if: env.VERSION != '0.0.0'
         id: create_release
@@ -136,11 +151,7 @@ jobs:
           release_name: v${{ env.VERSION }}
           draft: false
           prerelease: false
-          body: |
-            Release for openchami version v${{ env.VERSION }}
-
-            **RPM SHA256 Checksum:**
-            `${{ steps.compute_checksum.outputs.checksum }}`
+          body_path: CHANGELOG.md
 
       - name: Upload RPM to GitHub Release
         if: env.VERSION != '0.0.0'

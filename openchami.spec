@@ -48,12 +48,9 @@ chmod +x %{buildroot}/usr/libexec/openchami/bootstrap_openchami.sh
 chmod 600 %{buildroot}/etc/openchami/configs/openchami.env
 chmod 644 %{buildroot}/etc/openchami/configs/*
 
-
-
-
 %files
 %license LICENSE
-/etc/openchami/configs/*
+%config(noreplace) /etc/openchami/configs/*
 /etc/containers/systemd/*
 /etc/systemd/system/openchami.target
 /etc/systemd/system/openchami-cert-renewal.service
