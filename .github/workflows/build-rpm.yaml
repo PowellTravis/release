@@ -137,7 +137,7 @@ jobs:
             echo '**RPM SHA256 Checksum:**'
             echo '`${{ steps.compute_checksum.outputs.checksum }}`'
             echo ''
-            gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" -F tag_name='${{ env.RELEASE_TAG }}' --jq .body
+            gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" -F tag_name='v${{ env.VERSION }}' --jq .body
           } > CHANGELOG.md
 
       - name: Create GitHub Release
