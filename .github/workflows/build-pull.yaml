@@ -59,6 +59,12 @@ jobs:
             -C ~/rpmbuild/SOURCES openchami-${{ env.VERSION }} \
             --transform "s|openchami-${{ env.VERSION }}-${{ env.COMMIT_SHA }}|openchami-${{ env.VERSION }}|"
 
+      - name: Build RPM package
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/*.spec \
+            --define "version ${{ env.VERSION }}" \
+            --define "release 1"
+            
       - name: Find RPM file
         if: env.VERSION != '0.0.0'
         id: find_rpm
