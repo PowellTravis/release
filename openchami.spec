@@ -48,7 +48,7 @@ cp scripts/openchami_profile.sh         %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh             %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 cp scripts/ohpc-nodes.sh          %{buildroot}/usr/libexec/openchami/
 
-chmod +x %{buildroot}/usr/local/bin/bootstrap_openchami.sh
+chmod +x %{buildroot}/usr/libexec/openchami/bootstrap_openchami.sh
 chmod +x %{buildroot}/usr/libexec/openchami/ohpc-nodes.sh
 chmod +x %{buildroot}/usr/libexec/openchami/bootstrap_openchami.sh
 chmod +x %{buildroot}/usr/bin/openchami-certificate-update
