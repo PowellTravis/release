@@ -32,7 +32,7 @@ mkdir -p %{buildroot}/etc/openchami/configs \
          %{buildroot}/etc/openchami/pg-init \
          %{buildroot}/etc/containers/systemd \
          %{buildroot}/etc/systemd/system \
-         %{buildroot}/usr/local/bin \
+         %{buildroot}/usr/bin \
          %{buildroot}/etc/profile.d \
          %{buildroot}/usr/libexec/openchami
 
@@ -43,7 +43,7 @@ cp -r systemd/networks/*          %{buildroot}/etc/containers/systemd/
 cp -r systemd/targets/*           %{buildroot}/etc/systemd/system/
 cp -r systemd/system/*            %{buildroot}/etc/systemd/system/
 cp scripts/bootstrap_openchami.sh %{buildroot}/usr/libexec/openchami/
-cp script/ochami-certificate-update %{buildroot}/usr/bin/
+cp scripts/ochami-certificate-update %{buildroot}/usr/bin/
 cp scripts/openchami_profile.sh   %{buildroot}/etc/profile.d/openchami.sh
 cp scripts/multi-psql-db.sh       %{buildroot}/etc/openchami/pg-init/multi-psql-db.sh
 
@@ -64,6 +64,7 @@ chmod 644 %{buildroot}/etc/openchami/configs/*
 /usr/libexec/openchami/bootstrap_openchami.sh
 /etc/profile.d/openchami.sh
 /etc/openchami/pg-init/multi-psql-db.sh
+/usr/bin/ochami-certificate-update
 
 %post
 # reload systemd so new units are seen
