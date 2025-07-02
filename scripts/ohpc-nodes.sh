@@ -2,6 +2,7 @@
 NAME="$1"
 NID_OFFSET="$2"
 BMC_IP="$3"
+BMC_MAC=$(echo $FQDN|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
 MAC="$4"
 IP_ADDR="$5"
 NID=$((NID_OFFSET + 1))
@@ -11,6 +12,7 @@ cat >> /opt/ohpc/admin//nodes/nodes.yaml <<EOT
   nid: ${NID}
   xname: ${XNAME}
   bmc_ip: ${BMC_IP}
+  bmc_mac: ${BMC_MAC}
   group: compute
   interfaces:
   - mac_adr: ${MAC}
