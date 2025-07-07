@@ -65,10 +65,3 @@ jobs:
             --define "version ${{ env.VERSION }}" \
             --define "release 1"
             
-      - name: Find RPM file
-        if: env.VERSION != '0.0.0'
-        id: find_rpm
-        run: |
-          rpm_file=$(ls ~/rpmbuild/RPMS/noarch/*.rpm)
-          echo "rpm_file=${rpm_file}" >> $GITHUB_ENV
-          echo "::set-output name=path::${rpm_file}"
