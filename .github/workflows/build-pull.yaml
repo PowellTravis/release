@@ -64,3 +64,4 @@ jobs:
           rpmbuild -ba ~/rpmbuild/SPECS/*.spec \
             --define "version ${{ env.VERSION }}" \
             --define "release 1"
+            
