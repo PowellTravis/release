@@ -28,6 +28,7 @@ update_dns() {
     systemctl restart acme-deploy
     systemctl restart haproxy
 
+    # Restart OpenCHAMI target to ensure all certificates are updated
     systemctl restart openchami.target
 }
 
