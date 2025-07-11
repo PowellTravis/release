@@ -27,6 +27,8 @@ update_dns() {
     # Re-apply Certificates
     systemctl restart acme-deploy
     systemctl restart haproxy
+
+    systemctl restart openchami.target
 }
 
 help_page() {
