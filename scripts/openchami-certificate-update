@@ -24,11 +24,15 @@ update_dns() {
     # Reload systemD after .container changes
     systemctl daemon-reload
 
-    # Re-apply Certificates
-    systemctl restart acme-deploy
-
-    # Restart OpenCHAMI target to ensure all certificates are updated
-    systemctl restart openchami.target
+    echo "Changed FQDN to ${1}"
+    echo 'Either restart all of the OpenCHAMI services:'
+    echo
+    echo '  sudo systemctl restart openchami.target'
+    echo
+    echo 'or run the following to just regenerate/redeploy the certificates:'
+    echo
+    echo '  sudo systemctl restart acme-deploy'
+    echo
 }
 
 help_page() {
