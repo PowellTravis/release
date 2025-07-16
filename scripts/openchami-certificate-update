@@ -33,7 +33,11 @@ update_dns() {
 
 help_page() {
     echo "OpenCHAMI Certificate Update"
-    echo "Usage: $0 update (dns name) ex. demo.openchami.cluster"
+    echo "Update OpenCHAMI Certificates"
+    echo "Usage: $0 update FQDN"
+    echo
+    echo "EXAMPLES:"
+    echo "  $0 update demo.openchami.cluster"
 
 }
 case "$1" in 
@@ -50,7 +54,7 @@ case "$1" in
         fi
         ;;
     *)
-    help_page
-    exit 1
+        help_page
+        exit 1
     ;;
 esac
