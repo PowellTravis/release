@@ -15,7 +15,7 @@ cat >> /opt/ohpc/admin//nodes/nodes.yaml <<EOT
   bmc_mac: ${BMC_MAC}
   group: compute
   interfaces:
-  - mac_adr: ${MAC}
+  - mac_addr: ${MAC}
     ip_addrs:
     - name: management
       ip_addr: ${IP_ADDR}
