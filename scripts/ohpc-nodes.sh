@@ -7,7 +7,7 @@ MAC="$4"
 IP_ADDR="$5"
 NID=$((NID_OFFSET + 1))
 XNAME="x1000c0s0b${NID}"
-cat >> /opt/ohpc/admin//nodes/nodes.yaml <<EOT
+cat >> /opt/ohpc/admin/nodes/nodes.yaml <<EOT
 - name: ${NAME}
   nid: ${NID}
   xname: ${XNAME}
