@@ -10,6 +10,7 @@ update_dns() {
     sed -i "s/^SYSTEM_NAME=.*/SYSTEM_NAME=${short_name}/" /etc/openchami/configs/openchami.env
     sed -i "s/^SYSTEM_DOMAIN=.*/SYSTEM_DOMAIN=${dns_name}/" /etc/openchami/configs/openchami.env
     sed -i "s/^SYSTEM_URL=.*/SYSTEM_URL=${system_fqdn}/" /etc/openchami/configs/openchami.env
+    sed -i "s/^BSS_IPXE_SERVER=.*/BSS_IPXE_SERVER=${system_fqdn}/" /etc/openchami/configs/openchami.env
     sed -i "s|^URLS_SELF_ISSUER=.*|URLS_SELF_ISSUER=https://${system_fqdn}|" /etc/openchami/configs/openchami.env
     sed -i "s|^URLS_SELF_PUBLIC=.*|URLS_SELF_PUBLIC=https://${system_fqdn}|" /etc/openchami/configs/openchami.env
     sed -i "s|^URLS_LOGIN=.*|URLS_LOGIN=https://${system_fqdn}/login|" /etc/openchami/configs/openchami.env
